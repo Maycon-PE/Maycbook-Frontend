@@ -15,7 +15,7 @@ const validOrError = (type, value) => {
 			if (!/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{3,14}$/.test(value)) throw 'A senha deve conter no minímo 3 carácteres entre letras e números!!!'
 			break;
 		case 'name':
-			if (!/^[a-zA-Z]{4,25}$/.test(value)) throw 'Nome inválido!!!'
+			if (!/^[a-záàâãéèêíïóôõöúçñ ]+$/i.test(value)) throw 'Nome inválido!!!'
 			break;
 		case 'genre':
 			if (value !== 'm' && value !== 'f') throw 'Gênero inválido!!!'
