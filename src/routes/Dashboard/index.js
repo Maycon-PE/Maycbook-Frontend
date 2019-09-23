@@ -22,9 +22,10 @@ const Dashboard = ({ history, push, setPush, payload, setPayload }) => {
 				} else {
 					// Reconectar
 
-					requests
+					!payload && requests
 						.reconnect(local.get())
 						.then(res => {
+							console.log('res ', res)
 							setPayload({ ...res, token: local.get() })
 							setPreparetion({ ...preparetion, ready: true })
 						}).catch(err => {
@@ -62,7 +63,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload }) => {
 			}
 		}
 
-	}, [payload, push])
+	}, [push])
 
 	!push && setPush(history.push)
 

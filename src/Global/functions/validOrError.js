@@ -1,6 +1,6 @@
 
 export default function(type, value) {
-	if (!type.length || !value.length) throw null
+	if (!type.length || !value.length) throw null	
 
 	if (typeof type !== 'string') {
 		throw null
