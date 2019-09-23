@@ -9,6 +9,10 @@ import local from '../../Global/functions/localStorage'
 
 import * as requests from './requests'
 
+import {
+	Loading as LoadingStyled
+} from './styles'
+
 const Dashboard = ({ history, push, setPush, payload, setPayload }) => {
 	const [preparetion, setPreparetion] = useState({ ready: false, msg: 'Carregando' })
 
@@ -22,12 +26,11 @@ const Dashboard = ({ history, push, setPush, payload, setPayload }) => {
 				} else {
 					// Reconectar
 
-					!payload && requests
+					requests
 						.reconnect(local.get())
 						.then(res => {
-							console.log('res ', res)
 							setPayload({ ...res, token: local.get() })
-							setPreparetion({ ...preparetion, ready: true })
+							setTimeout(() => setPreparetion({ ...preparetion, ready: true }), 5000)
 						}).catch(err => {
 							local.remove()
 							toast.error(err)
@@ -67,7 +70,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload }) => {
 
 	!push && setPush(history.push)
 
-	return preparetion.ready ? <h1>{ JSON.stringify(payload, ['email', 'name'], 4) }</h1> : <h1>{ preparetion.msg }</h1>
+	return preparetion.ready ? <h1>{ JSON.stringify(payload, ['name', 'email']) }</h1> : <LoadingStyled> <img src='./imagens/loading.gif' alt='Imagem de loading' /> </LoadingStyled>
 }
 
 const mapDispatchToProps = dispatch => {
