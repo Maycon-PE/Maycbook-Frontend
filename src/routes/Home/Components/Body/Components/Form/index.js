@@ -1,8 +1,14 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import validOrError from '../../../../../Global/functions/validOrError'
-import Erro from '../../../../../Global/Components/Erro'
+import payload from '../../../../../../Global/redux/reducers/actions/payload'
+
+import validOrError from '../../../../../../Global/functions/validOrError'
+import local from '../../../../../../Global/functions/localStorage'
+import Erro from '../../../../../../Global/Components/Erro'
+
+import * as requests from './requests'
 
 import {
 	Form as FormStyled,
@@ -13,19 +19,21 @@ import {
 	ActionArea as ActionsAreaStyled
 } from './styles'
 
-const Register = () => {
+const Register = ({ push, success }) => {
 	const [data, setData] = useState({ genre: 'm' })
 
-	return (
-		<FormStyled autoComplete='off' onSubmit={e => {
+	const submit = e => {
 
 			e.preventDefault()
 
 			try {
 
+				data.password = data.password.toLowerCase()
+				data.confirmPassword = data.confirmPassword.toLowerCase()
+
 				if (data.password !== data.confirmPassword) {
-					throw 'Senhas diferentes!!!'
 					document.getElementById('$register_confirmPassowrd$').focus()
+					throw 'Senhas diferentes!!!'
 				}
 
 				validOrError('genre', data.genre)
@@ -33,7 +41,19 @@ const Register = () => {
 				validOrError('name', data.name)
 				validOrError('password', data.password)
 
-				// OK ...
+				requests
+					.store(data)
+					.then(res => {
+						success(res)
+						local.set(res.token)
+						toast.success(`${data.email} - criada com sucesso!!!`)
+
+						if (push) push('/maycbook')
+						else toast.error('Erro no redirecionamento, tente novamente!')
+
+					}).catch(() => {
+						toast.error('Cadastro não realizado :(')
+					})
 
 			} catch(e) {
 
@@ -42,8 +62,10 @@ const Register = () => {
 				typeof e === 'string' && toast.error(e)
 
 			}
+	}
 
-		}}>
+	return (
+		<FormStyled autoComplete='off' onSubmit={ submit }>
 			<TitleStyled><span className='_title'>Crie sua conta no Maycbook</span> <span className='_subtitle'>Rápido e facil!</span></TitleStyled>
 			<InputsGroupStyled>
 				<InputAreaStyled style={{ flex: '1', marginRight: '10px' }}>
@@ -125,4 +147,14 @@ const Register = () => {
 	)
 }
 
-export default Register
+const mapDispatchToProps = dispatch => {
+  return {
+    success: data => {
+      dispatch(payload.call(data))
+    }
+  }
+}
+
+const mapStateToProps = state => ({ push: state.push })
+
+export default connect( mapStateToProps, mapDispatchToProps )(Register)

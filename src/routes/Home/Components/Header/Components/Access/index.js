@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
+import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 
-import validOrError from '../../../../../Global/functions/validOrError'
+import payload from '../../../../../../Global/redux/reducers/actions/payload'
 
-import Erro from '../../../../../Global/Components/Erro'
+import validOrError from '../../../../../../Global/functions/validOrError'
+import local from '../../../../../../Global/functions/localStorage'
+import Erro from '../../../../../../Global/Components/Erro'
+
+import * as requests from './requests'
 
 import {
 	Form as FormStyled,
@@ -12,11 +17,10 @@ import {
 	Submit as SubmitStyled
 } from './styles'
 
-const Access = () => {
+const Access = ({ push, success }) => {
 	const [data, setData] = useState({})
 
-	return (
-		<FormStyled onSubmit={e => {
+	const submit = e => {
 
 		e.preventDefault()
 
@@ -25,14 +29,30 @@ const Access = () => {
 			validOrError('email', data.email)
 			validOrError('password', data.password)
 
-			// OK ...
+			requests
+				.login(data)
+				.then(res => {
+					success(res)
+					local.set(res.token)
+
+					if (push) push('/maycbook')
+					else toast.error('Erro no redirecionamento, tente novamente!')
+
+				}).catch(() => {
+					toast.warn('Conta inválida')
+				})
+			
 		} catch (e) {
 
 			if (e === null) return toast.error(<Erro />, { autoClose: false })
 
 			typeof e === 'string' && toast.error(e)
 		}
-	}}>
+
+	}
+
+	return (
+		<FormStyled onSubmit={ submit }>
 		<AllInputsGroupStyled>
 			<InputGroupStyled>
 
@@ -43,7 +63,6 @@ const Access = () => {
 					minLength='7'
 					placeholder='digite seu email' 
 					required 
-					value={ data.email }
 					onChange={({ target }) => setData({ ...data, email: target.value })} />
 
 			</InputGroupStyled>
@@ -56,7 +75,6 @@ const Access = () => {
 					minLength='3' maxLength='14' 
 					placeholder='digite sua senha' 
 					required 
-					value={ data.password }
 					onChange={({ target }) => setData({ ...data, password: target.value })} />
 
 			</InputGroupStyled>
@@ -68,4 +86,14 @@ const Access = () => {
 	)
 }
 
-export default Access
+const mapDispatchToProps = dispatch => {
+	return {
+		success: data => {
+			dispatch(payload.call(data))
+		}
+	}
+}
+
+const mapStateToProps = state => ({ push: state.push })
+
+export default connect( mapStateToProps, mapDispatchToProps )(Access)
