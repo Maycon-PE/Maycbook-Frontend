@@ -3,6 +3,7 @@ import { createGlobalStyle } from 'styled-components'
 const Style = createGlobalStyle`
 	* {
 		box-sizing: border-box;
+		font-family: monospace, sans-serif;
 	}
 
 	a {
@@ -21,8 +22,6 @@ const Style = createGlobalStyle`
 	body {
 		margin: 0;
 		padding: 0;
-
-		font-family: monospace, sans-serif;
 	}
 `
 

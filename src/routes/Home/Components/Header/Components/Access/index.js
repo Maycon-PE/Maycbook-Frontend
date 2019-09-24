@@ -29,13 +29,15 @@ const Access = ({ push, success }) => {
 			validOrError('email', data.email)
 			validOrError('password', data.password)
 
+			data.password = data.password.toLowerCase()
+
 			requests
 				.login(data)
 				.then(res => {
 					success(res)
 					local.set(res.token)
 
-					if (push) push('/maycbook')
+					if (push) push(`/maycbook`)
 					else toast.error('Erro no redirecionamento, tente novamente!')
 
 				}).catch(() => {

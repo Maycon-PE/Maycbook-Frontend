@@ -41,6 +41,8 @@ const Register = ({ push, success }) => {
 				validOrError('name', data.name)
 				validOrError('password', data.password)
 
+				data.password = data.password.toLowerCase()
+
 				requests
 					.store(data)
 					.then(res => {
