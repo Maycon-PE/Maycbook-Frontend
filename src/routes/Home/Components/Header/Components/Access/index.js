@@ -34,6 +34,7 @@ const Access = ({ push, success }) => {
 			requests
 				.login(data)
 				.then(res => {
+					console.log('payload ', res)
 					success(res)
 					local.set(res.token)
 

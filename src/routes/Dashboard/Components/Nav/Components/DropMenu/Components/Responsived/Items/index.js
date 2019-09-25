@@ -6,10 +6,11 @@ import payload from '../../../../../../../../../Global/redux/reducers/actions/pa
 import local from '../../../../../../../../../Global/functions/localStorage'
 
 import {
-	Ul as UlStyled
+	Ul as UlStyled,
+	Li as LiStyled
 } from './styles'
 
-const Drops = ({ resetPayload, push, name }) => {
+const Drops = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
 
 	const exit = () => {
 		resetPayload()
@@ -19,10 +20,10 @@ const Drops = ({ resetPayload, push, name }) => {
 
 	return (
 		<UlStyled>
-			<li>Convites</li>
-			<li>Notificações</li>
-			<li>Mensagens</li>
-			<li onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit }>sair</li>
+			<LiStyled qtd={ qtd_invites }>Convites</LiStyled>
+			<LiStyled qtd={ qtd_notifications }>Notificações</LiStyled>
+			<LiStyled qtd={ qtd_dialogues }>Mensagens</LiStyled>
+			<LiStyled onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }>sair</LiStyled>
 		</UlStyled>
 	)
 
@@ -34,6 +35,12 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-const mapStateToProps = state => ({ push: state.push, name: state.payload.name })
+const mapStateToProps = state => 
+	({ 
+		push: state.push, name: state.payload.name,
+		qtd_notifications: state.payload.documents.user.notifications.length,
+		qtd_invites: state.payload.documents.user.invites.length,
+		qtd_dialogues: state.payload.documents.user.dialogues.length
+	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Drops)

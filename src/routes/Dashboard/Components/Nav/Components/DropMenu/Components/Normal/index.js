@@ -6,10 +6,11 @@ import payload from '../../../../../../../../Global/redux/reducers/actions/paylo
 import local from '../../../../../../../../Global/functions/localStorage'
 
 import {
-	Ul as UlStyled
+	Ul as UlStyled,
+	Li as LiStyled
 } from './styles'
 
-const Normal = ({ resetPayload, push, name }) => {
+const Normal = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
 
 	const exit = () => {
 		resetPayload()
@@ -19,10 +20,10 @@ const Normal = ({ resetPayload, push, name }) => {
 
 	return (
 		<UlStyled>
-			<li><i className='fa fa-user-plus'></i></li>
-			<li><i className='fa fa-globe'></i></li>
-			<li><i className='fa fa-comments'></i></li>
-			<li onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }><i className='fa fa-sign-out'></i></li>
+			<LiStyled qtd={ qtd_invites }><i className='fa fa-user-plus'></i></LiStyled>
+			<LiStyled qtd={ qtd_notifications }><i className='fa fa-globe'></i></LiStyled>
+			<LiStyled qtd={ qtd_dialogues }><i className='fa fa-comments'></i></LiStyled>
+			<LiStyled onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }><i className='fa fa-sign-out'></i></LiStyled>
 		</UlStyled>
 	)
 }
@@ -35,6 +36,12 @@ const mapDispatchToProps = dispatch => {
 	}
 }
 
-const mapStateToProps = state => ({ push: state.push, name: state.payload.name })
+const mapStateToProps = state => 
+	({ 
+		push: state.push, name: state.payload.name,
+		qtd_notifications: state.payload.documents.user.notifications.length,
+		qtd_invites: state.payload.documents.user.invites.length,
+		qtd_dialogues: state.payload.documents.user.dialogues.length
+	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Normal)

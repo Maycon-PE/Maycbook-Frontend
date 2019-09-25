@@ -12,22 +12,24 @@ export const Ul = styled.ul`
 	> li:not(:last-child) {
 		border-right: 1px solid #222;
 	}
+`
 
-	> li {
-		padding: 2px 8px;
-		position: relative;
+export const Li = styled.li`
+	padding: 2px 8px;
+	position: relative;
 
-		:hover > i {
-			color: white;
-			cursor: pointer;
-		}
+	:hover > i {
+		color: white;
+		cursor: pointer;
+	}
 
+	${({ qtd }) => qtd && `
 		:after {
-			content: '+1';
+			content: '+${ qtd }';
 			position: absolute;
 			top: -5px;
 			right: 0px;
 			font-size: 10px;
 		}
-	}
+	`}	
 `

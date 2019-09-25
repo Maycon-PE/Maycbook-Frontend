@@ -7,11 +7,10 @@ export const Ul = styled.ul`
   flex-direction: column;
   right: 0;
   opacity: 0;
-  padding: 0;
   
   border: 1px solid rgba(0, 0, 0, .4);
   background: white;
-  padding: 5px;
+  padding: 5px 20px 5px 5px;
 
   :after {
   	content: '';
@@ -22,15 +21,6 @@ export const Ul = styled.ul`
     background: white;
     right: 8px;
     transform: rotate(45deg);
-  }
-
-  > li {
-  	padding: 0 5px;
-  	margin: 1px;
-
-  	:hover {
-  		cursor: pointer;
-  	}
   }
 
   > li:not(:last-child) {
@@ -49,4 +39,30 @@ export const Ul = styled.ul`
   		opacity: 1;
   	}	
   }
+`
+
+export const Li = styled.li`
+  padding: 0 10px;
+  margin: 1px;
+  position: relative;
+
+  transition: background .4s ease-out;
+  :hover {
+    cursor: pointer;
+    background: #555;
+    color: white;
+  }
+
+  ${({ qtd }) => qtd && `
+    :after {
+      content: '${ qtd }';
+      position: absolute;
+      right: -18px;
+      padding: 2px;
+      border-radius: 50%;
+      background: #222;
+      color: white;
+      font-size: 11px;
+    }
+  `}
 `
