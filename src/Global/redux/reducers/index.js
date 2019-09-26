@@ -5,6 +5,7 @@ import payload from './actions/payload'
 import history from './actions/history'
 import bodyDashboard from './actions/bodyDashboard'
 import responsive from './actions/responsive'
+import disconnect from './actions/disconnectSocket'
 
 export default function(state, action) {
 
@@ -20,7 +21,10 @@ export default function(state, action) {
 			return bodyDashboard.fall(state, action);
 
 		case(types.RESPONSIVE):
-			return responsive.fall(state, action)	;
+			return responsive.fall(state, action);
+
+		case(types.CLOSE_SOCKET):
+			return disconnect.fall(state, action)	;
 
 		default:
 			return state || initialState

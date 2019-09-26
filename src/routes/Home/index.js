@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
+import { toast } from 'react-toastify'
 
 import history from '../../Global/redux/reducers/actions/history'
 import payload from '../../Global/redux/reducers/actions/payload'
@@ -14,11 +15,13 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Home = ({ history, push, setPush, payload, resetPayload }) => {
+const Home = ({ history, push, setPush, payload, resetPayload, disconnectSocket }) => {
 	!push && setPush(history.push)
 
 	useEffect(() => {
 		payload && resetPayload()
+		disconnectSocket && disconnectSocket()
+		toast.dismiss()
 	}, [])
 
 	useEffect(() => {
@@ -54,7 +57,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => 
 	({ 
 		push: state.push,
-		payload: state.payload
+		payload: state.payload,
+		disconnectSocket: state.disconnectSocket
 	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

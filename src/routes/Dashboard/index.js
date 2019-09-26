@@ -3,11 +3,16 @@ import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 import socket from 'socket.io-client'
 
+import Notification from './Components/Toasts/IO/Notifications'
+import Invite from './Components/Toasts/IO/Invites'
+import Dialogue from './Components/Toasts/IO/Dialogues'
+
 import { baseURL } from '../../Global/api'
 
 import history from '../../Global/redux/reducers/actions/history'
 import payload from '../../Global/redux/reducers/actions/payload'
 import responsive from '../../Global/redux/reducers/actions/responsive'
+import disconnect from '../../Global/redux/reducers/actions/disconnectSocket'
 
 import Nav from './Components/Nav'
 
@@ -23,7 +28,7 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive }) => {
+const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setDisconnect, disconnectSocket }) => {
 	const [preparetion, setPreparetion] = useState(false)
 
 	useEffect(() => {
@@ -44,10 +49,25 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 		io.on('connect', () => {
 
+			setDisconnect(() => {
+				io.close()
+			})
 
+			io.on('notifications', data => {
+				toast.info(<Notification data={ data } />, { autoClose: false })
+			})
+
+			io.on('invites', data => {
+				toast.success(<Invite data={ data } />, { autoClose: false })	
+			})
+
+			io.on('dialogues', data => {
+				toast.info(<Dialogue data={ data } />, { autoClose: false })
+			})
 
 		})
 	}
+
 
 	useEffect(() => {
 
@@ -65,17 +85,13 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			}
 		}
 
-		if (payload && Object.values(payload).length) {
-			setPreparetion(true)
-			startSocket()
+		if (local.get()) {
+			reconnect()
 		} else {
-			if (local.get()) {
-				reconnect()
-			} else {
-				toast.error('Sem token')
-				history.push('/')	
-			}
+			toast.error('Sem token')
+			history.push('/')	
 		}
+	
 
 	}, [])
 
@@ -125,6 +141,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		setResponsive: responsived => {
 			dispatch(responsive.call(responsived))
+		},
+		setDisconnect: fb => {
+			dispatch(disconnect.call(fb))
 		}
 	}
 }
@@ -134,7 +153,8 @@ const mapStateToProps = state =>
 		push: state.push, 
 		payload: state.payload, 
 		bodyDashboard: state.bodyDashboard,
-		responsived: state.responsived 
+		responsived: state.responsived,
+		disconnectSocket: state.disconnectSocket
 	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)
