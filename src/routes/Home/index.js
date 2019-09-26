@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 
 import history from '../../Global/redux/reducers/actions/history'
+import payload from '../../Global/redux/reducers/actions/payload'
 
 import Header from './Components/Header'
 import Body from './Components/Body'
@@ -13,18 +14,22 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Home = ({ history, push, setPush, }) => {
+const Home = ({ history, push, setPush, payload, resetPayload }) => {
 	!push && setPush(history.push)
 
 	useEffect(() => {
-		push && local.get() && (() => {
+		payload && resetPayload()
+	}, [])
+
+	useEffect(() => {
+		local.get() && (() => {
 			if (window.confirm('Uma conta está aberta. Prosseguir?')) {
-				push('/maycbook')
+				history.push('/maycbook')
 			} else {
 				local.remove()
 			}
 		})()
-	}, [push])
+	}, [])
 
 	return (
 		<ContainerStyled>
@@ -39,13 +44,17 @@ const mapDispatchToProps = dispatch => {
 	return {
 		setPush: push => {
 			dispatch(history.call(push))
+		},
+		resetPayload: () => {
+			dispatch(payload.call(null))
 		}
 	}
 }
 
 const mapStateToProps = state => 
 	({ 
-		push: state.push
+		push: state.push,
+		payload: state.payload
 	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)
