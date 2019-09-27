@@ -10,7 +10,7 @@ import {
 	Li as LiStyled
 } from './styles'
 
-const Normal = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
+const Normal = ({ nft, cvt, cvs, resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
 
 	const exit = () => {
 		resetPayload()
@@ -20,9 +20,9 @@ const Normal = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_
 
 	return (
 		<UlStyled>
-			<LiStyled qtd={ qtd_invites }><i className='fa fa-user-plus'></i></LiStyled>
-			<LiStyled qtd={ qtd_notifications }><i className='fa fa-globe'></i></LiStyled>
-			<LiStyled qtd={ qtd_dialogues }><i className='fa fa-comments'></i></LiStyled>
+			<LiStyled qtd={ qtd_invites } onClick={ cvt }><i className='fa fa-user-plus'></i></LiStyled>
+			<LiStyled qtd={ qtd_notifications } onClick={ nft }><i className='fa fa-globe'></i></LiStyled>
+			<LiStyled qtd={ qtd_dialogues } onClick={ cvs }><i className='fa fa-comments'></i></LiStyled>
 			<LiStyled onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }><i className='fa fa-sign-out'></i></LiStyled>
 		</UlStyled>
 	)

@@ -2,6 +2,7 @@ import styled from 'styled-components'
 
 export const Container = styled.div`
 	color: black;
+	padding: 10px 0 20px 0;
 `
 
 export const Area = styled.div`
@@ -70,7 +71,7 @@ export const Footer = styled.div`
 
 	.name {
 		left: 0;
-		bottom: -2px;
+		bottom: 10px;
 	}
 `
 

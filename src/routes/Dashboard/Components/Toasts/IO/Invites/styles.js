@@ -21,6 +21,11 @@ export const Actions = styled.div`
 		text-align: center;
 	}
 
+	> span {
+		font-size: 13px;
+		text-align: center;
+	}
+
 	> div {
 		display: flex;
 		justify-content: space-around;

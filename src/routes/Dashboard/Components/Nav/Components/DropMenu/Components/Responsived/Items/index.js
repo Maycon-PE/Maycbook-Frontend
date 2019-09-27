@@ -10,7 +10,7 @@ import {
 	Li as LiStyled
 } from './styles'
 
-const Drops = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
+const Drops = ({ fb, resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
 
 	const exit = () => {
 		resetPayload()
@@ -20,9 +20,9 @@ const Drops = ({ resetPayload, push, name, qtd_notifications, qtd_invites, qtd_d
 
 	return (
 		<UlStyled>
-			<LiStyled qtd={ qtd_invites }>Convites</LiStyled>
-			<LiStyled qtd={ qtd_notifications }>Notificações</LiStyled>
-			<LiStyled qtd={ qtd_dialogues }>Mensagens</LiStyled>
+			<LiStyled qtd={ qtd_invites } onClick={ fb.cvt }>Convites</LiStyled>
+			<LiStyled qtd={ qtd_notifications } onClick={ fb.nft }>Notificações</LiStyled>
+			<LiStyled qtd={ qtd_dialogues } onClick={ fb.cvs }>Mensagens</LiStyled>
 			<LiStyled onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }>sair</LiStyled>
 		</UlStyled>
 	)

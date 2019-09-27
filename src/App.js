@@ -18,10 +18,8 @@ const App = () =>
 			<Routes />
 			<ToastContainer 
 				position="bottom-left"
-				autoClose={3000}
-				hideProgressBar
+				autoClose={7000}
 				newestOnTop={false}
-				closeOnClick
 				rtl={false}
 				pauseOnVisibilityChange
 				draggable

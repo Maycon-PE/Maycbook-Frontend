@@ -4,6 +4,7 @@ export const Container = styled.div`
 	display: flex;
 
 	.content {
+		width: 100%;
 		.who {
 			text-align: right;
 			position: relative;
@@ -44,7 +45,8 @@ export const Container = styled.div`
 		  }
 		}
 
-		.data {
+		.date {
+			text-align: center;
 			font-size: 13px;
 		}
 	}

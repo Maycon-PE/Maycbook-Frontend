@@ -13,6 +13,7 @@ import history from '../../Global/redux/reducers/actions/history'
 import payload from '../../Global/redux/reducers/actions/payload'
 import responsive from '../../Global/redux/reducers/actions/responsive'
 import disconnect from '../../Global/redux/reducers/actions/disconnectSocket'
+import notifications from '../../Global/redux/reducers/actions/notifications'
 
 import Nav from './Components/Nav'
 
@@ -28,7 +29,7 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setDisconnect, disconnectSocket }) => {
+const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setDisconnect, disconnectSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
 
 	useEffect(() => {
@@ -40,6 +41,10 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 	}, [])
 
 	const startSocket = () => {
+
+		const options = {
+			closeOnClick: false
+		}
 		
 		const io = socket(baseURL, {
 			query: {
@@ -54,20 +59,32 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			})
 
 			io.on('notifications', data => {
-				toast.info(<Notification data={ data } />, { autoClose: false })
+				toast.info(<Notification data={ data } />, options)
+				console.log(data)
+				setNotifications({ type: 'notifications', notification: data })
 			})
 
 			io.on('invites', data => {
-				toast.success(<Invite data={ data } />, { autoClose: false })	
+				toast.success(<Invite data={ data } />, options)	
+				setNotifications({ type: 'invites', invite: data })
 			})
 
 			io.on('dialogues', data => {
-				toast.info(<Dialogue data={ data } />, { autoClose: false })
+				toast.info(<Dialogue data={ data } />, options)
+				setNotifications({ type: 'dialogues', dialogue: data })
 			})
+
+			const data = {
+				who: 1,
+				_id: 'asdasdd',
+				image: '',
+				name: 'Loop',
+				'msg': 'Testando',
+				date: '12/12/12 - 12:12:12'
+			}
 
 		})
 	}
-
 
 	useEffect(() => {
 
@@ -76,7 +93,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 				requests
 					.reconnect(local.get())
 					.then(res => {
-						setPayload({ ...res, token: local.get() })
+						setPayload(res)
 					}).catch(err => {
 						local.remove()
 						toast.error(err)
@@ -100,6 +117,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			setPreparetion(true)	
 			startSocket()
 		})()
+		console.log(payload)
 	}, [payload])
 
 	useEffect(() => {
@@ -144,6 +162,9 @@ const mapDispatchToProps = dispatch => {
 		},
 		setDisconnect: fb => {
 			dispatch(disconnect.call(fb))
+		},
+		setNotifications: data => {
+			dispatch(notifications.call(data))
 		}
 	}
 }
