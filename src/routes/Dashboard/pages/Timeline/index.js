@@ -1,7 +1,17 @@
 import React from 'react'
 
+import Publication from './Components/Publication'
+
+import {
+	Container as ContainerStyled
+} from './styles'
+
 const Timeline = () => {
-	return <h1>Página Inicial</h1>
+	return (
+		<ContainerStyled>
+			<Publication />
+		</ContainerStyled>
+	)
 }
 
 export default Timeline

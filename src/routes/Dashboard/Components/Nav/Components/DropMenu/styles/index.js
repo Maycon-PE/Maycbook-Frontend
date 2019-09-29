@@ -9,6 +9,8 @@ export const Container = styled.div`
 
 export const Context = styled.div`
   border: 1px solid black;
+  z-index: 999;
+
   ${({ responsivided }) => {
     return responsivided ? `
       border: 1px solid black;
@@ -35,8 +37,8 @@ export const Context = styled.div`
         right: 76px;
         transform: rotate(45deg);
         background: rgb(200, 200, 200);
-        border-top: 1px solid black;
-        border-left: 1px solid black;
+        border-top: 1.3px solid black;
+        border-left: 1.3px solid black;
       }
     `
   }}

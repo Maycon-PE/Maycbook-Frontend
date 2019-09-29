@@ -24,6 +24,8 @@ import local from '../../Global/functions/localStorage'
 
 import * as requests from './requests'
 
+import initial_states from './initial_states'
+
 import {
 	Loading as LoadingStyled,
 	Container as ContainerStyled
@@ -31,6 +33,7 @@ import {
 
 const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setDisconnect, disconnectSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
+	const [viewPost, setViewPost] = useState({ ...initial_states.viewPost })
 
 	useEffect(() => {
 		if (window.innerWidth <= 715) {
@@ -134,7 +137,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 	const renderBody = index => {
 		switch(index) {
-			case 0:
+			case 1:
 				return <Profile />
 				break;
 			default:
