@@ -19,14 +19,20 @@ import {
 	ActionArea as ActionsAreaStyled
 } from './styles'
 
+const initial_state = {
+	genre: 'm', image: null
+}
+
 const Register = ({ push, success }) => {
-	const [data, setData] = useState({ genre: 'm' })
+	const [data, setData] = useState({ ...initial_state })
 
 	const submit = e => {
 
 			e.preventDefault()
 
 			try {
+
+				if (!data.image) throw 'Selecione uma imagem'
 
 				data.password = data.password.toLowerCase()
 				data.confirmPassword = data.confirmPassword.toLowerCase()
@@ -46,6 +52,7 @@ const Register = ({ push, success }) => {
 				requests
 					.store(data)
 					.then(res => {
+						toast.success(`${data.email} - criada com sucesso!!!`)
 						success(res)
 						local.set(res.token)
 						toast.success(`${data.email} - criada com sucesso!!!`)
@@ -66,9 +73,38 @@ const Register = ({ push, success }) => {
 			}
 	}
 
+	const setImage = ({ target }) => {
+		if (target.files[0]) {
+			!data.image && setData({ ...data, image: target.files[0] })
+		} else {
+			data.image && setData({ ...data, image: null })
+		}
+	}
+
+	const removeImage = () => {
+		document.getElementById('file').value = null
+		setData({ ...data, image: null })
+	}
+
+
 	return (
 		<FormStyled autoComplete='off' onSubmit={ submit }>
 			<TitleStyled><span className='_title'>Crie sua conta no Maycbook</span> <span className='_subtitle'>Rápido e facil!</span></TitleStyled>
+			<InputsGroupStyled>
+				<InputAreaStyled style={{ flex: '1', marginRight: '10px' }}>
+
+					<label htmlFor='file'>escolha uma foto</label>
+					<input
+						id='file'
+						type='file'
+						onChange={ setImage } />
+					<button type='button' className='set-image' onClick={ () => document.getElementById('file').click() }> { data.image ? data.image.name : 'selecione' }</button>
+
+				</InputAreaStyled>
+				<InputAreaStyled>
+					<button type='button' className='throw-image' onClick={ removeImage }><i className='fa fa-window-close'></i></button>
+				</InputAreaStyled>
+			</InputsGroupStyled>
 			<InputsGroupStyled>
 				<InputAreaStyled style={{ flex: '1', marginRight: '10px' }}>
 

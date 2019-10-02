@@ -51,7 +51,8 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		
 		const io = socket(baseURL, {
 			query: {
-				user_id: payload.id
+				user_id: payload.id,
+				mode: 'dashboard'
 			}
 		})
 
@@ -63,7 +64,6 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 			io.on('notifications', data => {
 				toast.info(<Notification data={ data } />, options)
-				console.log(data)
 				setNotifications({ type: 'notifications', notification: data })
 			})
 
@@ -77,14 +77,9 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 				setNotifications({ type: 'dialogues', dialogue: data })
 			})
 
-			const data = {
-				who: 1,
-				_id: 'asdasdd',
-				image: '',
-				name: 'Loop',
-				'msg': 'Testando',
-				date: '12/12/12 - 12:12:12'
-			}
+			io.on('posts_deleted', ids => {
+				toast.error(<p>Inconcistência de dados e publicações foram excluidas<br />{ ids.join(' - ') }</p>)
+			})
 
 		})
 	}
@@ -120,7 +115,6 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			setPreparetion(true)	
 			startSocket()
 		})()
-		console.log(payload)
 	}, [payload])
 
 	useEffect(() => {

@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 
+import { baseURL } from '../../../../../../Global/api'
+
 import bodyDashboard from '../../../../../../Global/redux/reducers/actions/bodyDashboard'
 
 import {
@@ -9,22 +11,17 @@ import {
 	Button as ButtonStyled
 } from './styles'
 
-const UlNav = ({ name, toggleBody, index }) => {
+const UlNav = ({ name, toggleBody, image, index }) => {
 	return (
 		<UlStyled>
 			<li>
 				<ButtonStyled active={ index === 0 } onClick={() => toggleBody(0)}>
-					<ProfileStyled src='https://www.pena.com.br/wp-content/uploads/2017/05/user-icon.jpg' alt='Imagem do usuário' />{ name.split(' ')[0] }
+					<ProfileStyled src={`${baseURL}/files/uploads/${image}`} alt='Imagem do usuário' />{ name.split(' ')[0] }
 				</ButtonStyled>
 			</li>
 			<li>
 				<ButtonStyled active={ index === 1 } onClick={() => toggleBody(1)}>
 					Página Inicial
-				</ButtonStyled>
-			</li>
-			<li>
-				<ButtonStyled active={ index === 2 }>
-					Encontrar Amigos
 				</ButtonStyled>
 			</li>
 		</UlStyled>
@@ -40,6 +37,6 @@ const mapDispatchToProps = dispacth => {
 }
 
 const mapStateToProps = state => 
-	({ name: state.payload.name, index: state.bodyDashboard })
+	({ name: state.payload.name, index: state.bodyDashboard, image: state.payload.image })
 
 export default connect(mapStateToProps, mapDispatchToProps)(UlNav)

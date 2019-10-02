@@ -27,7 +27,7 @@ export const Title = styled.div`
 export const InputArea = styled.div`
 	position: relative;
 
-	> input, select {
+	> input, select, button {
 		width: 100%;
 		margin: 4px;
 		border-radius: 4px;
@@ -44,12 +44,39 @@ export const InputArea = styled.div`
 		padding: 7px;
 	}
 
+	> button {
+		padding: 10px;
+	}
+
+	> button.set-image {
+		background: #b415c8;
+		font-weight: bolder;
+		color: white;
+
+		:hover {
+			background: linear-gradient(to top, #b415c8, #b13ac2);			
+		}
+	}
+
+	> button.throw-image {
+		background: #4b5c5b;
+
+		:hover {
+			background: linear-gradient(to top, #414f4e, #4b5c5b);			
+		}
+	}
+
+	> input[type=file] {
+		display: none;
+	}
+
 `
 
 export const InputsGroup = styled.div`
 	display: flex;
 	flex-flow: row wrap;
 	justify-content: space-between;
+	align-items: flex-end;
 `
 
 export const ActionArea = styled.div`

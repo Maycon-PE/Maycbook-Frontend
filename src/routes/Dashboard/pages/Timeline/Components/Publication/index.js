@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
+import ImageUploader from 'react-images-upload'
 
 import * as requests from './requests'
 
@@ -13,25 +14,21 @@ import {
 
 const initial_state = {
 	image: null,
+	selecteds: [],
 	label: 'Selecionar imagem'
 }
 
 const Timeline = ({ push, token }) => {
 	const [data, setData] = useState({ ...initial_state })
-
-	useEffect(() => {
-		console.log(data)
-		if (data.image) {
-			if (data.label !== 'Mudar imagem') setData({ ...data, label: 'Mudar imagem' })
-		}	else {
-			if (data.label !== 'Selecionar imagem') setData({ ...data, label: 'Selecionar imagem' })
-		}
-	}, [data])
+	const [req, setReq] = useState(false)
 
 	const send = e => {
 		e.preventDefault()
 
 		try {
+
+			if (data.selecteds.length > 1) throw 'Selecione apenas uma imagem'
+
 			const text = document.getElementById('text').value
 
 			if (text.length > 300) throw 'Legenda muito grande'
@@ -40,10 +37,13 @@ const Timeline = ({ push, token }) => {
 
 			if (!data.image) throw 'Sem imagem'
 
+			setReq(true)
+
 			requests
 				.send({data: { text, image: data.image }, token })
 				.then(() => toast.success('Publicado com sucesso'))
 				.catch(() => toast.error('Falha na publicação'))
+				.finally(() => setReq(false))
 
 		} catch (err) {
 			toast.warn(typeof err === 'string'? err : 'Erro interno :((')
@@ -51,20 +51,29 @@ const Timeline = ({ push, token }) => {
 
 	}
 
-	const setImage = ({ target }) => {
-		setData({ ...data, image: target.files[0] })
+	const setImage = file => {	
+		setData({ ...data, image: file[0], selecteds: file })
 	}
 
 	return (
 		<ContainerStyled onSubmit={ send }>
 			<AreaImageStyled seted={ data.image !== null }>
-				<input type='file' id='file' onChange={ setImage } required />
-				<button type='button' onClick={ () => document.getElementById('file').click() }>{ data.label }</button>
+				 <ImageUploader
+            withPreview={true}
+            buttonText='Deixe somente uma imagem'
+            fileSizeError='Imagem muito grande'
+            fileTypeError='Tipo do arquivo não esperado'
+            onChange={setImage}
+            imgExtension={['.jpg', '.jpeg']}
+            label='Aqui vai sua imagem'
+            maxFileSize={5242880}
+            singleImage={true}
+        	/>
 			</AreaImageStyled>
 			<AreaTextStyled>
-				<textarea id='text' maxLength='300' required />
+				<textarea id='text' maxLength='300' placeholder='Digite aqui uma legenda' required />
 			</AreaTextStyled>
-			<AreaButtonsStyled>
+			<AreaButtonsStyled req={req}>
 				<button type='button' className='cancel' onClick={() => {
 					document.getElementById('text').value = ''
 					setData({ ...initial_state }) 

@@ -5,6 +5,9 @@ export const Container = styled.form`
 	width: 100%;
 	max-width: 500px;
 	position: relative;
+  padding: 10px;
+	border-radius: 10px;
+	background: linear-gradient(to top,#2851A3,#2851A3,#2851A3,#3578E5)
 
 `
 export const AreaImage = styled.div`
@@ -33,10 +36,12 @@ export const AreaText = styled.div`
 		font-size: 20px;
 		width: 100%;
 		max-height: 400px;
+		border-radius: 5px;
 	}
 `
 
 export const AreaButtons = styled.footer`
+	pointer-events: ${({ req }) => req ? 'none' : 'painted'};
 	display: flex;
 	justify-content: space-around;
 
@@ -44,6 +49,11 @@ export const AreaButtons = styled.footer`
 		padding: 8px;
 		border-radius: 5px;
 		border: none;
+		opacity: .8;
+
+		:hover {
+			opacity: 1;
+		}
 	}
 
 	.cancel {
@@ -52,6 +62,10 @@ export const AreaButtons = styled.footer`
 
 	>button[type=submit] {
 		background: rgba(50, 200, 50, .8);
+
+		:hover {
+			cursor: ${({ req }) => req ? 'wait' : 'pointer'};
+		}
 	}
 
 `

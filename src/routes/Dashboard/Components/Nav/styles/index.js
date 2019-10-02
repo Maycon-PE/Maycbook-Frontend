@@ -3,6 +3,7 @@ import styled from 'styled-components'
 export const Container = styled.header`
 	grid-area: nav;
 	background: linear-gradient(to top, #2851A3, #2851A3, #2851A3, #3578E5);
+	margin-bottom: 10px;
 
 	display: flex;
 	justify-content: center;

@@ -12,14 +12,12 @@ import {
 	CloseModal as CloseModalStyled
 } from './styles'
 
-const initial_context = { notifications: false, dialogues: false, invites: false }
+const initial_context = { notifications: false, dialogues: false }
 
 const MsgMenu = ({ responsived }) => {
 	const [context, setContext] = useState({ opened: false, body: initial_context })
 
 	const nft = () => setContext({ open: !context.open, body: { ...initial_context, notifications: !context.body.notifications } })
-
-	const cvt = () => setContext({ open: !context.open, body: { ...initial_context, invites: !context.body.invites } })
 
 	const cvs = () => setContext({ open: !context.open, body: { ...initial_context, dialogues: !context.body.dialogues } })
 
@@ -30,7 +28,7 @@ const MsgMenu = ({ responsived }) => {
 	return (
 		<Fragment>
 			<ContainerStyled responsivided={ responsived }>
-				{ responsived ? <Responsive nft={ nft } cvt={ cvt } cvs={ cvs } /> :  <Normal nft={ nft } cvt={ cvt } cvs={ cvs } /> }
+				{ responsived ? <Responsive nft={ nft } cvs={ cvs } /> :  <Normal nft={ nft } cvs={ cvs } /> }
 				{ context.open && <ContextStyled responsivided={ responsived }>
 						{ responsived && <CloseModalStyled onClick={ () => setContext({ open: false, body: { ...initial_context } })}>Fechar</CloseModalStyled> }
 						{ renderContext() }

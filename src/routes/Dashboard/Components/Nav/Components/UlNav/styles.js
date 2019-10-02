@@ -28,5 +28,6 @@ export const Button  = styled.button`
 
 export const Profile = styled.img`
   width: 21px;
+  margin-right: 4px;
   border-radius: 50%;
 `

@@ -7,6 +7,7 @@ export const Ul = styled.ul`
   flex-direction: column;
   right: 0;
   opacity: 0;
+  z-index: 999;
   
   border: 1px solid rgba(0, 0, 0, .4);
   background: white;

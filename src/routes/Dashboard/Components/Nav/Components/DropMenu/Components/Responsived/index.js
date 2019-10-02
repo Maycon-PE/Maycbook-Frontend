@@ -6,13 +6,13 @@ import {
 	ClickToggle as ClickToggleStyled
 } from './styles'
 
-const Responsive = ({ nft, cvt, cvs }) => {
+const Responsive = ({ nft, cvs }) => {
 	const [menu, setMenu] = useState(false)
 
 	const toggleMenu = () => setMenu(!menu)
 
 	const functionsInProps = {
-		nft, cvt, cvs
+		nft, cvs
 	}
 
 	return 	(

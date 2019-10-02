@@ -1,9 +1,10 @@
 import styled from 'styled-components'
 
-const background = 'linear-gradient(120deg, rgb(200, 200, 200), white, white, white, rgb(200, 200, 200))'
+const background = '#c2c2c2'
 
 export const Loading = styled.div`
-	height: 100vh;
+	min-height: 100vh;
+	height: 100%;
 	position: relative;
 	display: flex;
 	justify-content: center;
@@ -13,7 +14,8 @@ export const Loading = styled.div`
 `
 
 export const Container = styled.div`
-	height: 100vh;
+	min-height: 100vh;
+	height: 100%;
 	background: ${ background };
 
 	display: grid;

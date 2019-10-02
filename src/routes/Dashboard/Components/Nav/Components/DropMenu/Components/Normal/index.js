@@ -10,7 +10,7 @@ import {
 	Li as LiStyled
 } from './styles'
 
-const Normal = ({ nft, cvt, cvs, resetPayload, push, name, qtd_notifications, qtd_invites, qtd_dialogues }) => {
+const Normal = ({ nft, cvt, cvs, resetPayload, push, name, qtd_notifications, qtd_dialogues }) => {
 
 	const exit = () => {
 		resetPayload()
@@ -20,7 +20,6 @@ const Normal = ({ nft, cvt, cvs, resetPayload, push, name, qtd_notifications, qt
 
 	return (
 		<UlStyled>
-			<LiStyled qtd={ qtd_invites } onClick={ cvt }><i className='fa fa-user-plus'></i></LiStyled>
 			<LiStyled qtd={ qtd_notifications } onClick={ nft }><i className='fa fa-globe'></i></LiStyled>
 			<LiStyled qtd={ qtd_dialogues } onClick={ cvs }><i className='fa fa-comments'></i></LiStyled>
 			<LiStyled onClick={ () => window.confirm(`Deseja realmente sair, ${ name }?`) && exit() }><i className='fa fa-sign-out'></i></LiStyled>
@@ -40,7 +39,6 @@ const mapStateToProps = state =>
 	({ 
 		push: state.push, name: state.payload.name,
 		qtd_notifications: state.payload.documents.user.notifications.length,
-		qtd_invites: state.payload.documents.user.invites.length,
 		qtd_dialogues: state.payload.documents.user.dialogues.length
 	})
 
