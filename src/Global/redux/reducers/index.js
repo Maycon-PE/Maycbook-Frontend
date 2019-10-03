@@ -5,8 +5,8 @@ import payload from './actions/payload'
 import history from './actions/history'
 import bodyDashboard from './actions/bodyDashboard'
 import responsive from './actions/responsive'
-import disconnect from './actions/disconnectSocket'
 import notifications from './actions/notifications'
+import socket from './actions/socket'
 
 export default function(state, action) {
 
@@ -24,11 +24,11 @@ export default function(state, action) {
 		case(types.RESPONSIVE):
 			return responsive.fall(state, action);
 
-		case(types.CLOSE_SOCKET):
-			return disconnect.fall(state, action);
-
 		case(types.NOTIFICATIONS):
 			return notifications.fall(state, action);
+
+		case(types.SOCKET):
+			return socket.fall(state, action);
 
 		default:
 			return state || initialState

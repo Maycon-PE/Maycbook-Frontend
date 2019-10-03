@@ -11,7 +11,7 @@ import { baseURL } from '../../Global/api'
 import history from '../../Global/redux/reducers/actions/history'
 import payload from '../../Global/redux/reducers/actions/payload'
 import responsive from '../../Global/redux/reducers/actions/responsive'
-import disconnect from '../../Global/redux/reducers/actions/disconnectSocket'
+import storeSocket from '../../Global/redux/reducers/actions/socket'
 import notifications from '../../Global/redux/reducers/actions/notifications'
 
 import Nav from './Components/Nav'
@@ -30,7 +30,7 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setDisconnect, disconnectSocket, setNotifications }) => {
+const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
 	const [viewPost, setViewPost] = useState({ ...initial_states.viewPost })
 
@@ -50,16 +50,13 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		
 		const io = socket(baseURL, {
 			query: {
-				user_id: payload.id,
-				mode: 'dashboard'
+				user_id: payload.id
 			}
 		})
 
 		io.on('connect', () => {
 
-			setDisconnect(() => {
-				io.close()
-			})
+			setSocket(io)
 
 			io.on('commented', data => {
 				data.mode = 'comment'
@@ -158,8 +155,8 @@ const mapDispatchToProps = dispatch => {
 		setResponsive: responsived => {
 			dispatch(responsive.call(responsived))
 		},
-		setDisconnect: fb => {
-			dispatch(disconnect.call(fb))
+		setSocket: socket => {
+			dispatch(storeSocket.call(socket))
 		},
 		setNotifications: data => {
 			dispatch(notifications.call(data))
@@ -172,8 +169,7 @@ const mapStateToProps = state =>
 		push: state.push, 
 		payload: state.payload, 
 		bodyDashboard: state.bodyDashboard,
-		responsived: state.responsived,
-		disconnectSocket: state.disconnectSocket
+		responsived: state.responsived
 	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Dashboard)

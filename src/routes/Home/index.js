@@ -15,12 +15,12 @@ import {
 	Container as ContainerStyled
 } from './styles'
 
-const Home = ({ history, push, setPush, payload, resetPayload, disconnectSocket }) => {
+const Home = ({ history, push, setPush, payload, resetPayload, mySocket }) => {
 	!push && setPush(history.push)
 
 	useEffect(() => {
 		payload && resetPayload()
-		disconnectSocket && disconnectSocket()
+		mySocket && mySocket.close()
 		toast.dismiss()
 	}, [])
 
@@ -58,7 +58,7 @@ const mapStateToProps = state =>
 	({ 
 		push: state.push,
 		payload: state.payload,
-		disconnectSocket: state.disconnectSocket
+		mySocket: state.socket
 	})
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home)

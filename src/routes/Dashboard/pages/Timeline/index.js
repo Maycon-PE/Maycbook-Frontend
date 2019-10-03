@@ -5,7 +5,6 @@ import socket from 'socket.io-client'
 import * as requests from './requests'
 
 import { baseURL } from '../../../../Global/api'
-import disconnect from '../../../../Global/redux/reducers/actions/disconnectSocket'
 
 import Publication from './Components/Publication'
 import Post from './Components/Posts'
@@ -15,7 +14,7 @@ import {
 } from './styles'
 
 
-const Timeline = ({ payload, setDisconnectSocket }) => {
+const Timeline = ({ payload, mySocket }) => {
 	const [page, setPage] = useState(1)
 	const [pagination, setPagination] = useState({ count: 1, limit: 1 })
 	const [ready, setReady] = useState({ status: false, msg: 'Carregando' })
@@ -46,30 +45,23 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 	}
 
 	const startSocket = () => {
-		const io = socket(baseURL, {
-			query: {
-				user_id: +payload.id,
-				mode: 'posts'
-			}
-		})
 
-		setDisconnectSocket(() => {
-			io.close()
-		})
+		mySocket.emit('redux')
+		console.log('emit')
 
-		io.on('new_comments', ({ who, at }) => {
+		mySocket.on('new_comments', ({ who, at }) => {
 			if (+who !== payload.id) {
 				console.log(`buscando novos comentários de ${at}`)
 			}
 		})
 
-		io.on('new_likes', ({ who, at }) => {
+		mySocket.on('new_likes', ({ who, at }) => {
 			if (+who !== payload.id) {
 				console.log(`buscando novas curtidas de ${at}`)
 			}
 		})
 
-		io.on('new_post', () => {
+		mySocket.on('new_post', () => {
 			doRequest()
 		})
 	}
@@ -91,8 +83,11 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 
 	useEffect(() => {
 		doRequest()
-		startSocket()
 	}, [])
+
+	useEffect(() => {
+		mySocket !== null && startSocket()
+	}, [mySocket])
 
 
 	const renderPosts = posts => {
@@ -113,14 +108,6 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 	)
 }
 
-const mapDispatchToProps = dispatch => {
-	return {
-		setDisconnectSocket: fb => {
-			dispatch(disconnect.call(fb))
-		}
-	}
-}
+const mapStateToProps = state => ({ payload: state.payload, mySocket: state.socket })
 
-const mapStateToProps = state => ({ payload: state.payload })
-
-export default connect(mapStateToProps, mapDispatchToProps)(Timeline)
+export default connect(mapStateToProps)(Timeline)

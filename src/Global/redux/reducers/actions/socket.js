@@ -4,13 +4,13 @@ function action() {
 	return {
 
 		fall(state, action) {
-			return { ...state, disconnectSocket: action.data }
+			return { ...state, socket: action.data }
 		},
 
-		call(fb) {
+		call(socket) {
 			return {
-				type: types.CLOSE_SOCKET,
-				data: fb
+				type: types.SOCKET,
+				data: socket
 			}	
 		}
 
