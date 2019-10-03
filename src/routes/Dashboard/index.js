@@ -3,8 +3,7 @@ import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 import socket from 'socket.io-client'
 
-import Notification from './Components/Toasts/IO/Notifications'
-import Invite from './Components/Toasts/IO/Invites'
+import Notification from './Components/Toasts/IO/Notification'
 import Dialogue from './Components/Toasts/IO/Dialogues'
 
 import { baseURL } from '../../Global/api'
@@ -62,14 +61,16 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 				io.close()
 			})
 
-			io.on('notifications', data => {
+			io.on('commented', data => {
+				data.mode = 'comment'
 				toast.info(<Notification data={ data } />, options)
 				setNotifications({ type: 'notifications', notification: data })
 			})
 
-			io.on('invites', data => {
-				toast.success(<Invite data={ data } />, options)	
-				setNotifications({ type: 'invites', invite: data })
+			io.on('liked', data => {
+				data.mode = 'like'
+				toast.info(<Notification data={ data } />, options)
+				setNotifications({ type: 'notifications', notification: data })
 			})
 
 			io.on('dialogues', data => {

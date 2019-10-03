@@ -2,8 +2,6 @@ import React, { useState } from 'react'
 
 import { baseURL } from '../../../../../../Global/api'
 
-import * as requests from './requests'
-
 import Comment from './Components/Comment'
 
 import {
@@ -18,7 +16,9 @@ import {
 	Actions as ActionsStyled,
 	CommentsArea as CommentsAreaStyled,
 	LikeButton as LikeButtonStyled,
-	CommentButton as CommentButtonStyled
+	CommentButton as CommentButtonStyled,
+	DoComments as DoCommentsStyled,
+	CommentsActions as CommentsActionsStyled
 } from './styles'
 
 //MYSQL POST
@@ -51,30 +51,50 @@ import {
 // _id: "5d90fb848be2fa1b908934bc"
 
 const Post = ({ data, fb }) => {
-	const [doComments, setDoComments] = useState(false)
+	const [doComments, setDoComments] = useState({ status: false, sending: false })
 
 	const { id, path, date, content, author, author_image, stats } = data
 
 	const [statsHook, setStateHook] = useState({ ...stats })
 
-	const like = _id => {
-		fb.like(_id, data => {
+	const like = () => {
+		fb.like(stats._id, data => {
 			if (data !== null) {
 				const newStateHook = { ...statsHook }
 				newStateHook.data.rate.likes = data
 
 				setStateHook({ ...newStateHook })
-				console.log(data)
 			}
+		})
+	}
+
+	const comment = e => {
+		e.preventDefault()
+		setDoComments({ status: true, sending: true })
+
+		const msg = document.getElementById(`post_id_${stats._id}`).value
+
+		const data = { msg }
+
+		fb.comment(stats._id, data, res => {
+			if (res !== null) {
+				const newStateHook = { ...statsHook }
+				newStateHook.data.comments = res
+
+				setStateHook({ ...newStateHook })
+				document.getElementById(`post_id_${stats._id}`).value = ''
+			}
+			setDoComments({ status: true, sending: false })
 		})
 	}
 
 	const renderComments = () => {
 		const comments = []
 
-		for (let i = 0; i <= 3; i++ ) {
-			comments.push(<Comment key={i} />)
-		}
+
+		statsHook.data.comments.forEach(data => {
+			comments.push(<Comment key={`comment_${data._id}`} data={data} />)
+		})
 
 		return comments
 	}
@@ -100,10 +120,18 @@ const Post = ({ data, fb }) => {
 			</PictureStyled>
 			<FooterStyled>
 				<ActionsStyled>
-					<LikeButtonStyled onClick={ () => like(stats._id) }>Curtir - { statsHook.data.rate.likes.length }</LikeButtonStyled>
-					<CommentButtonStyled onClick={() => setDoComments(!doComments) }>Comentar</CommentButtonStyled>
+					<LikeButtonStyled onClick={ like }>Curtir - { statsHook.data.rate.likes.length }</LikeButtonStyled>
+					<CommentButtonStyled onClick={() => setDoComments({ ...doComments, status: !doComments.status }) }>Comentar - { statsHook.data.comments.length }</CommentButtonStyled>
 				</ActionsStyled>
-				<CommentsAreaStyled opened={ doComments }>
+				<CommentsAreaStyled opened={ doComments.status }>
+					<DoCommentsStyled req={ doComments.sending } onSubmit={ comment }>
+						<textarea id={`post_id_${ stats._id }`} minLength='1' maxLength='200' required>
+						</textarea>
+						<CommentsActionsStyled>
+							<button style={{ flex: '2' }} type='submit'>Enviar</button>
+							<button type='button' onClick={() => document.getElementById(`post_id_${stats._id}`).value = ''}>Apagar tudo</button>
+						</CommentsActionsStyled>
+					</DoCommentsStyled>
 					{ renderComments() }
 				</CommentsAreaStyled>
 			</FooterStyled>

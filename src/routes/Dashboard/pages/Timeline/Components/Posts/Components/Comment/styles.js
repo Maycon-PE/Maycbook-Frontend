@@ -5,9 +5,20 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 10px;
+  max-height: 200px;
+  margin: 10px 2px;
+  background: steelblue;
+  border-radius: 10px;
 `
 export const Img = styled.div`
+  position: sticky;
+  top: 0;
 
+  > img {
+    width: 55px;
+    margin: 10px;
+    border-radius: 10px;
+  }
 `
 
 export const Name = styled.header`
@@ -21,5 +32,13 @@ export const Name = styled.header`
 `
 
 export const Msg = styled.article`
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  overflow-y: scroll;
+  position: relative;
 
+  > p {
+    text-indent: 10px;
+  }
 `

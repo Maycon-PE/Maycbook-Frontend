@@ -128,3 +128,42 @@ export const CommentsArea = styled.div`
 		overflow: hidden;
 	`}
 `
+
+export const DoComments = styled.form`
+	${({ req }) => req && ` 
+		pointer-events: none; 
+
+		:hover {
+			cursor: wait;
+		}
+	`}
+
+	> textarea {
+		width: 100%;
+    min-height: 50px;
+    max-height: 123px;
+    padding: 4px;
+	}
+`
+
+export const CommentsActions = styled.div`
+	display: flex;
+	justify-content: center;
+	width: 100%;
+	max-width: 350px;
+	margin: auto;
+
+	> button {
+		margin: 2px 4px;
+		padding: 4px 17px;
+		border-radius: 5px;
+	}
+
+	> button[type=button] {
+		background: #e93131;
+	}
+
+	> button[type=submit] {
+		background: #14cc14;
+	}
+`

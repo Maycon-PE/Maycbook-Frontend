@@ -18,7 +18,6 @@ function action() {
 				}
 			})()
 			action.data.type === 'notifications' && newPayload.documents.user.notifications.unshift(action.data.notification)
-			action.data.type === 'invites' && newPayload.documents.user.invites.unshift(action.data.invite)
 
 			return { ...state, payload: newPayload }
 		},

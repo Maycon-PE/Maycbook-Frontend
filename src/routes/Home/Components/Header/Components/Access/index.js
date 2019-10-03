@@ -8,6 +8,9 @@ import validOrError from '../../../../../../Global/functions/validOrError'
 import local from '../../../../../../Global/functions/localStorage'
 import Erro from '../../../../../../Global/Components/Erro'
 
+//Toasts
+import InvalidAccount from '../../../Toasts/InvalidAccount'
+
 import * as requests from './requests'
 
 import {
@@ -34,7 +37,6 @@ const Access = ({ push, success }) => {
 			requests
 				.login(data)
 				.then(res => {
-					console.log('payload ', res)
 					success(res)
 					local.set(res.token)
 
@@ -42,7 +44,7 @@ const Access = ({ push, success }) => {
 					else toast.error('Erro no redirecionamento, tente novamente!')
 
 				}).catch(() => {
-					toast.warn('Conta inválida')
+					toast.warn(<InvalidAccount />)
 				})
 			
 		} catch (e) {

@@ -16,6 +16,8 @@ import {
 
 
 const Timeline = ({ payload, setDisconnectSocket }) => {
+	const [page, setPage] = useState(1)
+	const [pagination, setPagination] = useState({ count: 1, limit: 1 })
 	const [ready, setReady] = useState({ status: false, msg: 'Carregando' })
 	const [posts , setPosts] = useState([])
 
@@ -23,13 +25,13 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 		const token = payload.token
 
 		requests
-			.publications(token)
+			.publications({ token, page })
 			.then(data => {
-				const newPosts = data.posts.reduce((current, next) => {
+				const newPosts = data.data.posts.reduce((current, next) => {
 
 					current.push({
 						...next,
-						stats: { ...data.stats.find(({ _id }) => _id == next.stats) }
+						stats: { ...data.data.stats.find(({ _id }) => _id == next.stats) }
 					})
 
 					return current
@@ -37,6 +39,8 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 				}, [])
 
 				setPosts(newPosts)
+				console.log(data.pagination)
+				setPagination(data.pagination)
 				!ready.status && setReady({ ...ready, status: true })
 			}).catch(err => setReady({ status: false, msg: 'Houve um erro' }))
 	}
@@ -53,8 +57,19 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 			io.close()
 		})
 
+		io.on('new_comments', ({ who, at }) => {
+			if (+who !== payload.id) {
+				console.log(`buscando novos comentários de ${at}`)
+			}
+		})
+
+		io.on('new_likes', ({ who, at }) => {
+			if (+who !== payload.id) {
+				console.log(`buscando novas curtidas de ${at}`)
+			}
+		})
+
 		io.on('new_post', () => {
-			console.log(1)
 			doRequest()
 		})
 	}
@@ -63,6 +78,12 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 		like: (_id, cb) => {
 			requests
 				.like({ _id, token: payload.token })
+				.then(data => cb(data))
+				.catch(() => cb(null))
+		},
+		comment: (_id, data, cb) => {
+			requests
+				.comment({ _id, data, token: payload.token })
 				.then(data => cb(data))
 				.catch(() => cb(null))
 		}
@@ -87,7 +108,7 @@ const Timeline = ({ payload, setDisconnectSocket }) => {
 	return (
 		<ContainerStyled>
 			<Publication />
-			{ ready.status ? renderPosts(posts) : <h1>{ ready.msg }</h1> }
+			{ ready.status ? posts.length ? renderPosts(posts) : <h1>Seja o primeiro a publicar!</h1> : <h1>{ ready.msg }</h1> }
 		</ContainerStyled>
 	)
 }

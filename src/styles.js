@@ -15,8 +15,16 @@ const Style = createGlobalStyle`
 		border: none;
 	}
 
+	button {
+		opacity: .8;
+	}
+
 	button:hover, select:hover {
 		cursor: pointer;
+	}
+
+	button:hover {
+		opacity: 1;
 	}
 
 	body {

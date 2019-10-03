@@ -26,6 +26,7 @@ export const Title = styled.div`
 
 export const InputArea = styled.div`
 	position: relative;
+	margin: 0 2px;
 
 	> input, select, button {
 		width: 100%;

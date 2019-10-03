@@ -10,8 +10,6 @@ export const store = (data) => {
 				formData.append(slice[0], slice[1])
 			})
 
-		console.log(formData)
-
 		api
 			.post('/user', formData, { headers: { ['Content-Type']: 'multipart/form-data' } })
 			.then(({ data }) => {
