@@ -47,17 +47,39 @@ const Timeline = ({ payload, mySocket }) => {
 	const startSocket = () => {
 
 		mySocket.emit('redux')
-		console.log('emit')
 
-		mySocket.on('new_comments', ({ who, at }) => {
+		mySocket.on('new_comments', ({ who, at, data }) => {
 			if (+who !== payload.id) {
-				console.log(`buscando novos comentários de ${at}`)
+
+				const newPosts = [ ...posts ].map(post => {
+					if (+post.id === +at) {
+						post.stats.data.comments = data
+
+						return post
+					} else {
+						return post
+					}
+				})
+
+				newPosts.length && setPosts(newPosts)
 			}
 		})
 
-		mySocket.on('new_likes', ({ who, at }) => {
+		mySocket.on('change_like', ({ who, at, data }) => {
 			if (+who !== payload.id) {
-				console.log(`buscando novas curtidas de ${at}`)
+
+				const newPosts = [ ...posts ].map(post => {
+					if (+post.id === +at) {
+						post.stats.data.rate.likes = data
+
+						return post
+					} else {
+						return post
+					}
+				})
+
+			 newPosts.length &&	setPosts(newPosts)
+
 			}
 		})
 

@@ -25,8 +25,25 @@ const initio_view = {
 	search: {}
 }
 
-const Notifications = ({ payload, responsived }) =>
-	<UlStyled responsivided={ responsived }>
+const Notifications = ({ payload, responsived }) => {
+
+	const getMsg = (mode, msg, name ) => {
+		switch(mode) {
+			case 'like':
+				return  `${name} curtiu uma publicação sua`
+
+			case 'comment':
+				return msg.length > 60 ? msg.slice(0, 60) + ' ...' : msg
+
+			case 'dislike':
+				return `${name} tirou a sua curtida em uma publicação sua`
+
+			default:
+				return 'Indefinido'	
+		}
+	}
+
+	return (<UlStyled responsivided={ responsived }>
 		{ payload.documents.user.notifications.map(({ mode, who, image, _id, name, msg, date }) => {
 			return (
 				<li key={`item_notification_${date}`}>
@@ -37,13 +54,14 @@ const Notifications = ({ payload, responsived }) =>
 					</ImgStyled>
 					<ContentStyled>
 						<p className='who'>{ name } - { mode === 'like' ? 'curtiu' : 'comentou' }</p>
-						<p className='msg'>{ mode === 'like' ? `${name} curtiu uma publicação sua` : msg.length > 60 ? msg.slice(0, 60) + ' ...' : msg }</p>
+						<p className='msg'>{ getMsg(mode, msg, name) }</p>
 						<p className='date'>{ date }</p>
 					</ContentStyled>
 				</li>
 			)
 		}) }
-	</UlStyled>
+	</UlStyled>)
+}
 
 const mapStateToProps = state => ({ payload: state.payload, responsived: state.responsived })
 

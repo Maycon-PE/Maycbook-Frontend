@@ -70,6 +70,12 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 				setNotifications({ type: 'notifications', notification: data })
 			})
 
+			io.on('disliked', data => {
+				data.mode = 'dislike'
+				toast.info(<Notification data={ data } />, options)
+				setNotifications({ type: 'notifications', notification: data })
+			})
+
 			io.on('dialogues', data => {
 				toast.info(<Dialogue data={ data } />, options)
 				setNotifications({ type: 'dialogues', dialogue: data })

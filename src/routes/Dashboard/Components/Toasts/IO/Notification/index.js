@@ -13,11 +13,27 @@ import {
 const Notification = ({ data }) => {
 	const { mode, who, name, image, date, msg } = data
 
+	const getMsg = () => {
+		switch(mode) {
+			case 'like':
+				return  `${name} curtiu uma publicação sua`
+
+			case 'comment':
+				return msg
+
+			case 'dislike':
+				return `${name} tirou a sua curtida em uma publicação sua`
+
+			default:
+				return 'Indefinido'	
+		}
+	}
+
 	return (
 		<ContainerStyled>
 			<AreaStyled>
 				<MsgStyled>
-					<p>{ mode === 'like' ? `${name} curtiu uma publicação sua` : msg }</p>
+					<p>{ getMsg() }</p>
 				</MsgStyled>
 				<ImgStyled>
 					<img 
