@@ -21,49 +21,17 @@ import {
 	CommentsActions as CommentsActionsStyled
 } from './styles'
 
-//MYSQL POST
-// content: "Melhor filme!!!"
-// created_at: "2019-09-29T18:44:20.717Z"
-// id: 2
-// path: "posts/2_julio-1569782659212.jpg"
-// stats: "5d90fb848be2fa1b908934bc"
-// updated_at: "2019-09-29T18:44:20.717Z"
-// user_id: 2
-
-//MYSQL USER
-// created_at: "2019-09-29T17:38:09.706Z"
-// email: "carla@hotmail.com"
-// genre: "f"
-// id: 1
-// image: "profiles/default-f.jpg"
-// name: "Carla"
-// password: "$2a$10$1ifRsjcq00D4jEJWBEoNNeo5mpQpUAk7TN3YtNSa4aFlr9sygSCk6"
-// updated_at: "2019-09-29T17:38:09.706Z"
-
-//MONGODB STATS
-// createdAt: "2019-09-29T18:44:20.500Z"
-// data: {rate: {…}, comments: Array(0)}
-// date: "29/09/2019-15:44:20"
-// post_id: 2
-// updatedAt: "2019-09-29T18:44:20.892Z"
-// user_id: 2
-// __v: 0
-// _id: "5d90fb848be2fa1b908934bc"
-
 const Post = ({ data, fb }) => {
 	const [doComments, setDoComments] = useState({ status: false, sending: false })
 
 	const { id, path, date, content, author, author_image, stats } = data
 
-	const [statsHook, setStateHook] = useState({ ...stats })
-
 	const like = () => {
-		fb.like(stats._id, data => {
-			if (data !== null) {
-				const newStateHook = { ...statsHook }
-				newStateHook.data.rate.likes = data
-
-				setStateHook({ ...newStateHook })
+		fb.like(stats._id, res => {
+			if (res) {
+				console.log('Você curtiu')
+			} else {
+				console.log('Não foi possível curtir :/')
 			}
 		})
 	}
@@ -77,11 +45,8 @@ const Post = ({ data, fb }) => {
 		const data = { msg }
 
 		fb.comment(stats._id, data, res => {
-			if (res !== null) {
-				const newStateHook = { ...statsHook }
-				newStateHook.data.comments = res
 
-				setStateHook({ ...newStateHook })
+			if (res) {
 				document.getElementById(`post_id_${stats._id}`).value = ''
 			}
 			setDoComments({ status: true, sending: false })
@@ -92,7 +57,7 @@ const Post = ({ data, fb }) => {
 		const comments = []
 
 
-		statsHook.data.comments.forEach(data => {
+		stats.data.comments.forEach(data => {
 			comments.push(<Comment key={`comment_${data._id}`} data={data} />)
 		})
 
@@ -120,8 +85,8 @@ const Post = ({ data, fb }) => {
 			</PictureStyled>
 			<FooterStyled>
 				<ActionsStyled>
-					<LikeButtonStyled onClick={ like }>Curtir - { statsHook.data.rate.likes.length }</LikeButtonStyled>
-					<CommentButtonStyled onClick={() => setDoComments({ ...doComments, status: !doComments.status }) }>Comentar - { statsHook.data.comments.length }</CommentButtonStyled>
+					<LikeButtonStyled onClick={ like }>Curtir - { stats.data.rate.likes.length }</LikeButtonStyled>
+					<CommentButtonStyled onClick={() => setDoComments({ ...doComments, status: !doComments.status }) }>Comentar - { stats.data.comments.length }</CommentButtonStyled>
 				</ActionsStyled>
 				<CommentsAreaStyled opened={ doComments.status }>
 					<DoCommentsStyled req={ doComments.sending } onSubmit={ comment }>

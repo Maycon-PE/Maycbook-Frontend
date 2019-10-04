@@ -10,3 +10,7 @@ export const Container = styled.article`
 	flex-direction: column;
 	align-items: center;
 `
+
+export const LoadMore = styled.button`
+
+`

@@ -1,4 +1,5 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
 import { baseURL } from '../../../../../../../../Global/api'
 
@@ -9,12 +10,12 @@ import {
 	Msg as MsgStyled
 } from './styles'
 
-const Comment = ({ data }) => {
-	const { name, date, image, msg } = data
+const Comment = ({ data, user_id }) => {
+	const { name, date, image, msg, who } = data
 
 	return (<ContainerStyled>
 		<NameStyled>
-			<span className='name'>{ name }</span><span className='date'>{ date || '12/12/12:12/12/12' }</span>
+			<span className='name'>{ +who === user_id ? 'Você' : name }</span><span className='date'>{ date || '12/12/12:12/12/12' }</span>
 		</NameStyled>
 		<MsgStyled>
 			<ImgStyled>
@@ -27,4 +28,6 @@ const Comment = ({ data }) => {
 	</ContainerStyled>) 
 }
 
-export default Comment
+const mapStateToProps = state => ({ user_id: state.payload.id  })
+
+export default connect(mapStateToProps)(Comment)

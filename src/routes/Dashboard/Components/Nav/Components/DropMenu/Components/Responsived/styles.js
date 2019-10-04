@@ -1,8 +1,8 @@
 import styled from 'styled-components'
 
 export const ClickToggle = styled.nav`
-	width: 100%;
-	height: 100%;
+	width: 30px;
+	height: 43px;
 	border-radius: 8px;
 
 	display: flex;

@@ -59,19 +59,16 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			setSocket(io)
 
 			io.on('commented', data => {
-				data.mode = 'comment'
 				toast.info(<Notification data={ data } />, options)
 				setNotifications({ type: 'notifications', notification: data })
 			})
 
 			io.on('liked', data => {
-				data.mode = 'like'
 				toast.info(<Notification data={ data } />, options)
 				setNotifications({ type: 'notifications', notification: data })
 			})
 
 			io.on('disliked', data => {
-				data.mode = 'dislike'
 				toast.info(<Notification data={ data } />, options)
 				setNotifications({ type: 'notifications', notification: data })
 			})

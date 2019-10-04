@@ -1,121 +1,105 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { connect } from 'react-redux'
-import PaginationComponent from "react-reactstrap-pagination"
-import "bootstrap/dist/css/bootstrap.min.css"
-import socket from 'socket.io-client'
+import { toast } from 'react-toastify'
 
 import * as requests from './requests'
 
-import { baseURL } from '../../../../Global/api'
+import NewPublication from '../../Components/Toasts/IO/NewPublication'
 
+import NextBack from './Components/NextBack'
 import Publication from './Components/Publication'
 import Post from './Components/Posts'
 
 import {
-	Container as ContainerStyled
+	Container as ContainerStyled,
+	LoadMore as LoadMoreStyled
 } from './styles'
 
 
 const Timeline = ({ payload, mySocket }) => {
-	const [page, setPage] = useState(1)
+	const [showLoadMore, setShowLoadMore] = useState(true)
+	const [page, setPage] = useState(0)
 	const [pagination, setPagination] = useState({ count: 1, limit: 1 })
 	const [ready, setReady] = useState({ status: false, msg: 'Carregando' })
 	const [posts , setPosts] = useState([])
 
-	const doRequest = () => {
+	const doRequest = (more = true) => {
 		const token = payload.token
 
 		requests
-			.publications({ token, page })
+			.publications({ token, page: page })
 			.then(data => {
-				const newPosts = data.data.posts.reduce((current, next) => {
+					const newPosts = data.data.posts.reduce((current, next) => {
 
-					current.push({
-						...next,
-						stats: { ...data.data.stats.find(({ _id }) => _id == next.stats) }
-					})
+						current.push({
+							...next,
+							stats: { ...data.data.stats.find(({ _id }) => _id == next.stats) }
+						})
 
-					return current
+						return current
 
-				}, [])
+					}, [])
 
 				setPosts(newPosts)
 
-				if (data.pagination.count !== pagination.count || data.pagination.limit !== pagination.limit) setPagination(data.pagination)
+				if (pagination.count !== data.pagination.count || pagination.limit !== data.pagination.limit) setPagination({ ...data.pagination })
 					
 				!ready.status && setReady({ ...ready, status: true })
 			}).catch(err => setReady({ status: false, msg: 'Houve um erro' }))
 	}
 
+
 	const startSocket = () => {
 
-		mySocket.emit('redux')
-
-		mySocket.on('new_comments', ({ who, at, data }) => {
-			if (+who !== payload.id) {
-
-				const newPosts = [ ...posts ].map(post => {
-					if (+post.id === +at) {
-						post.stats.data.comments = data
-
-						return post
-					} else {
-						return post
-					}
-				})
-
-				newPosts.length && setPosts(newPosts)
-			}
+		mySocket.on('connect', () => {
+			// doRequest(false)
+			console.log('connect')
 		})
 
-		mySocket.on('change_like', ({ who, at, data }) => {
-			if (+who !== payload.id) {
-
-				const newPosts = [ ...posts ].map(post => {
-					if (+post.id === +at) {
-						post.stats.data.rate.likes = data
-
-						return post
-					} else {
-						return post
-					}
-				})
-
-			 newPosts.length &&	setPosts(newPosts)
-
-			}
+		mySocket.on('disconnect', () => {
+			console.log('disconnect')
 		})
 
-		mySocket.on('new_post', () => {
-			doRequest()
+		mySocket.on('requests', where => {
+			// Contem problemas de estado
+
+			// console.log('page ', page)
+			// console.log('where ', where)
+			// console.log(where === page)
+			where === page && doRequest()
+			if (typeof where === 'object' && +where.who !== +payload.id) toast.info(<NewPublication data={ where } />)
 		})
 	}
 
 	const actions = {
 		like: (_id, cb) => {
 			requests
-				.like({ _id, token: payload.token })
-				.then(data => cb(data))
-				.catch(() => cb(null))
+				.like({ _id, token: payload.token, page })
+				.then(() => {
+					doRequest()
+					cb(true)
+				}).catch(() => cb(false))
 		},
 		comment: (_id, data, cb) => {
 			requests
-				.comment({ _id, data, token: payload.token })
-				.then(data => cb(data))
-				.catch(() => cb(null))
+				.comment({ _id, data, token: payload.token, page })
+				.then(() => {
+					doRequest()
+					cb(true)
+				}).catch(() => cb(false))
 		}
 	}
 
-	const paginationFunction = e => {
-		setPage(e)
-	}
+	const next = () => page + 3 <= pagination.count && setPage(page + 3)
+
+	const back = () => page - 3 >= 0 && setPage(page - 3)
 
 	useEffect(() => {
 		doRequest()
 	}, [page])
 
 	useEffect(() => {
-		mySocket !== null && startSocket()
+		mySocket && startSocket()
 	}, [mySocket])
 
 
@@ -132,28 +116,10 @@ const Timeline = ({ payload, mySocket }) => {
 	return (
 		<ContainerStyled>
 			<Publication />
+			<NextBack nextf={ next } nextv={ page + 3 >= pagination.count } backf={ back } backv={ page === 0 } />
 			{ ready.status ? posts.length ? (<Fragment>
-				<PaginationComponent
-					firstPageText='|<'
-					previousPageText='<'
-					nextPageText='>'
-					lastPageText='>|'
-          totalItems={ pagination.count }
-          pageSize={ pagination.limit }
-          onSelect={ paginationFunction }
-          maxPaginationNumbers={9}
-          activePage={ page } />
 				{ renderPosts(posts) }
-				<PaginationComponent
-					firstPageText='|<'
-					previousPageText='<'
-					nextPageText='>'
-					lastPageText='>|'
-          totalItems={ pagination.count }
-          pageSize={ pagination.limit }
-          onSelect={ paginationFunction }
-          maxPaginationNumbers={9}
-          activePage={ page } />
+				<NextBack nextf={ next } nextv={ page + 3 >= pagination.count } backf={ back } backv={ page === 0 } />
 				</Fragment>) : <h1>Seja o primeiro a publicar!</h1> : <h1>{ ready.msg }</h1> }
 		</ContainerStyled>
 	)

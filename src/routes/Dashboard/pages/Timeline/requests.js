@@ -11,21 +11,21 @@ export const publications = ({ token, page }) => {
 }
 
 
-export const like = ({ _id, token }) => {
+export const like = ({ _id, token, page }) => {
 	return new Promise((resolve, reject) => {
 		api
-			.post(`/auth/post/like/${_id}`, {}, { headers: { Authorization: `Bearer ${token}` } })
-			.then(({ data }) => resolve(data))
+			.post(`/auth/post/like/${_id}/${page}`, {}, { headers: { Authorization: `Bearer ${token}` } })
+			.then(() => resolve())
 			.catch(err => reject(err))
 
 	})
 }
 
-export const comment = ({ _id, data, token }) => {
+export const comment = ({ _id, data, token, page }) => {
 	return new Promise((resolve, reject) => {
 		api
-			.post(`/auth/post/comment/${_id}`, data, { headers: { Authorization: `Bearer ${token}` } })
-			.then(({ data }) => resolve(data))
+			.post(`/auth/post/comment/${_id}/${page}`, data, { headers: { Authorization: `Bearer ${token}` } })
+			.then(() => resolve())
 			.catch(err => reject(err))
 	})
 }
