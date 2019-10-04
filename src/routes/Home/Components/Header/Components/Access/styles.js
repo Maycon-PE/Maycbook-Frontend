@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const Form = styled.form`
-
 	display: flex;
 	flex-flow: row wrap;
 	align-items: flex-end;
@@ -16,7 +15,6 @@ export const AllInputsGroup = styled.div`
 
 export const InputGroup = styled.div`
 	margin: 0 5px;
-	padding: 2px;
 	position: relative;
 
 	display: flex;
@@ -24,7 +22,7 @@ export const InputGroup = styled.div`
 
 	> input {
 		margin: 4px 0;
-		padding: 4px;
+		padding: 2px;
 		display: block;
 		border-radius: 4px;
 
@@ -43,7 +41,7 @@ export const InputGroup = styled.div`
 export const Submit = styled.button`
 	margin: 5px;
 	border-radius: 4px;
-	padding: 4px 6px;
+	padding: 1px 3px;
 	background: rgba(0, 0, 0, .5);
 	color: white;
 	border: 1px solid white;

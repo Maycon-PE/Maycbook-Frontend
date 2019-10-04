@@ -5,6 +5,7 @@ export const Container = styled.form`
 	width: 100%;
 	max-width: 500px;
 	position: relative;
+	margin: 20px 0;
   padding: 10px;
 	border-radius: 10px;
 	background: linear-gradient(to top,#2851A3,#2851A3,#2851A3,#3578E5)
@@ -46,7 +47,7 @@ export const AreaButtons = styled.footer`
 	justify-content: space-around;
 
 	> button {
-		padding: 8px;
+		padding: 2px;
 		border-radius: 5px;
 		border: none;
 		opacity: .8;

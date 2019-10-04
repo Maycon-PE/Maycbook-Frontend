@@ -9,10 +9,10 @@ export const Container = styled.div`
 `
 
 export const Input = styled.input`
-	padding: 6px 8px;
+	padding: 2px 4px;
 	margin: 0 10px;
 	border-radius: 3px;
-	width: 230px;
+	width: 280px;
 
 	${ ({ responsived }) => {
 		return responsived && `
@@ -22,9 +22,10 @@ export const Input = styled.input`
 			padding: 15px;
 			background: linear-gradient(to left, rgb(200, 200, 200), white, white, white, rgb(200, 200, 200));
 			outline: none;
+			z-index: 999;
 
 			:after {
-				content: 'asdasd';
+				content: '';
 				position: absolute;
 				height: 100%;
 				width: 100%;

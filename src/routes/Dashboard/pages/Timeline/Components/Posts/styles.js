@@ -89,7 +89,7 @@ export const Actions = styled.div`
 
 	> button {
 		margin: 0 5px;
-		padding: 8px;
+		padding: 3px;
 		border-radius: 4px;
 		text-transform: uppercase;
 	}
@@ -117,7 +117,6 @@ export const CommentButton = styled.button`
 
 export const CommentsArea = styled.div`
 	transition: all .5s ease-in;
-	border: 1px solid black;
 	width: 100%;
 	transform: scaleY(${({ opened }) => opened ? '1' : '0'});
 	${({ opened }) => opened ? `

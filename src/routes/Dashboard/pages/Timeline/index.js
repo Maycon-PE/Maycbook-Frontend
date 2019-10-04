@@ -1,5 +1,7 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import { connect } from 'react-redux'
+import PaginationComponent from "react-reactstrap-pagination"
+import "bootstrap/dist/css/bootstrap.min.css"
 import socket from 'socket.io-client'
 
 import * as requests from './requests'
@@ -38,8 +40,9 @@ const Timeline = ({ payload, mySocket }) => {
 				}, [])
 
 				setPosts(newPosts)
-				console.log(data.pagination)
-				setPagination(data.pagination)
+
+				if (data.pagination.count !== pagination.count || data.pagination.limit !== pagination.limit) setPagination(data.pagination)
+					
 				!ready.status && setReady({ ...ready, status: true })
 			}).catch(err => setReady({ status: false, msg: 'Houve um erro' }))
 	}
@@ -103,9 +106,13 @@ const Timeline = ({ payload, mySocket }) => {
 		}
 	}
 
+	const paginationFunction = e => {
+		setPage(e)
+	}
+
 	useEffect(() => {
 		doRequest()
-	}, [])
+	}, [page])
 
 	useEffect(() => {
 		mySocket !== null && startSocket()
@@ -125,7 +132,29 @@ const Timeline = ({ payload, mySocket }) => {
 	return (
 		<ContainerStyled>
 			<Publication />
-			{ ready.status ? posts.length ? renderPosts(posts) : <h1>Seja o primeiro a publicar!</h1> : <h1>{ ready.msg }</h1> }
+			{ ready.status ? posts.length ? (<Fragment>
+				<PaginationComponent
+					firstPageText='|<'
+					previousPageText='<'
+					nextPageText='>'
+					lastPageText='>|'
+          totalItems={ pagination.count }
+          pageSize={ pagination.limit }
+          onSelect={ paginationFunction }
+          maxPaginationNumbers={9}
+          activePage={ page } />
+				{ renderPosts(posts) }
+				<PaginationComponent
+					firstPageText='|<'
+					previousPageText='<'
+					nextPageText='>'
+					lastPageText='>|'
+          totalItems={ pagination.count }
+          pageSize={ pagination.limit }
+          onSelect={ paginationFunction }
+          maxPaginationNumbers={9}
+          activePage={ page } />
+				</Fragment>) : <h1>Seja o primeiro a publicar!</h1> : <h1>{ ready.msg }</h1> }
 		</ContainerStyled>
 	)
 }

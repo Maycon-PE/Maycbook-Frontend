@@ -27,26 +27,29 @@ export const Title = styled.div`
 export const InputArea = styled.div`
 	position: relative;
 	margin: 0 2px;
+	max-width: 100%;
 
 	> input, select, button {
 		width: 100%;
 		margin: 4px;
 		border-radius: 4px;
 		display: block;
+		max-width: 100%;
+		overflow: hidden;
 
 		background: rgba(255, 255, 255, .7);
 	}
 
 	> input {
-		padding: 8px;
+		padding: 3px;
 	}
 
 	> select {
-		padding: 7px;
+		padding: 4px;
 	}
 
 	> button {
-		padding: 10px;
+		padding: 5px;
 	}
 
 	> button.set-image {
@@ -113,5 +116,5 @@ export const ActionArea = styled.div`
 `
 
 export const Action = styled.button`
-	padding: 10px;
+	padding: 3px;
 `

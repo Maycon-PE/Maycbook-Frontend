@@ -40,5 +40,6 @@ export const Msg = styled.article`
 
   > p {
     text-indent: 10px;
+    padding-right: 2px;
   }
 `

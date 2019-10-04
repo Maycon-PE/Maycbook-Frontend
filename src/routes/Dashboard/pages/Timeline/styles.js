@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 
 export const Container = styled.article`
-	border: 1px solid black;
 	width: 100%;
 	max-width: 1200px;
 	margin: auto;
