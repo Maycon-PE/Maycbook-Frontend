@@ -23,7 +23,7 @@ const Timeline = ({ payload, mySocket }) => {
 	const [ready, setReady] = useState({ status: false, msg: 'Carregando' })
 	const [posts , setPosts] = useState([])
 
-	const doRequest = (more = true) => {
+	const doRequest = () => {
 		const token = payload.token
 
 		requests
@@ -52,7 +52,6 @@ const Timeline = ({ payload, mySocket }) => {
 	const startSocket = () => {
 
 		mySocket.on('connect', () => {
-			// doRequest(false)
 			console.log('connect')
 		})
 
@@ -61,13 +60,9 @@ const Timeline = ({ payload, mySocket }) => {
 		})
 
 		mySocket.on('requests', where => {
-			// Contem problemas de estado
-
-			// console.log('page ', page)
-			// console.log('where ', where)
-			// console.log(where === page)
-			where === page && doRequest()
-			if (typeof where === 'object' && +where.who !== +payload.id) toast.info(<NewPublication data={ where } />)
+			if (typeof where === 'object' && +where.who !== +payload.id) {
+				toast.info(<NewPublication data={ where } />)
+			}
 		})
 	}
 

@@ -38,7 +38,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => 
 	({ 
 		push: state.push, name: state.payload.name,
-		qtd_notifications: state.payload.documents.user.notifications.length,
+		qtd_notifications: state.payload.documents.user.notifications.filter(({ who }) => +who !== +state.payload.id).length,
 		qtd_dialogues: state.payload.documents.user.dialogues.length
 	})
 

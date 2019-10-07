@@ -34,6 +34,18 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 	const [preparetion, setPreparetion] = useState(false)
 	const [viewPost, setViewPost] = useState({ ...initial_states.viewPost })
 
+	const doRequest = mode => {
+		const token = payload.token
+
+		requests
+			.notifications({ token, mode })
+			.then(result => {
+				setNotifications({ type: mode, data: result })
+			}).catch(err => {
+				console.log(err)
+			})
+	}
+
 	useEffect(() => {
 		if (window.innerWidth <= 715) {
 			!responsived && setResponsive(true)
@@ -58,24 +70,14 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 			setSocket(io)
 
-			io.on('commented', data => {
+			io.on('actions', data => {
 				toast.info(<Notification data={ data } />, options)
-				setNotifications({ type: 'notifications', notification: data })
-			})
-
-			io.on('liked', data => {
-				toast.info(<Notification data={ data } />, options)
-				setNotifications({ type: 'notifications', notification: data })
-			})
-
-			io.on('disliked', data => {
-				toast.info(<Notification data={ data } />, options)
-				setNotifications({ type: 'notifications', notification: data })
+				doRequest('notifications')
 			})
 
 			io.on('dialogues', data => {
 				toast.info(<Dialogue data={ data } />, options)
-				setNotifications({ type: 'dialogues', dialogue: data })
+				doRequest('dialogues')
 			})
 
 			io.on('posts_deleted', ids => {

@@ -43,9 +43,25 @@ const Notifications = ({ payload, responsived }) => {
 		}
 	}
 
+	const getAction = mode => {
+		switch(mode) {
+			case 'like':
+				return 'curtiu'
+
+			case 'dislike':
+				return 'tirou a curtida'
+
+			case 'comment':
+				return 'comentou'	
+
+			default:
+				return 'Indefinido'	
+		}
+	}
+
 	return (<UlStyled responsivided={ responsived }>
 		{ payload.documents.user.notifications.map(({ mode, who, image, _id, name, msg, date }) => {
-			return (
+			return payload.id !== who ? (
 				<li key={`item_notification_${date}`}>
 					<ImgStyled>
 						<img 
@@ -53,12 +69,12 @@ const Notifications = ({ payload, responsived }) => {
 							alt={`Imagem do/da ${name}`} />
 					</ImgStyled>
 					<ContentStyled>
-						<p className='who'>{ name } - { mode === 'like' ? 'curtiu' : 'comentou' }</p>
+						<p className='who'>{ name } - { getAction(mode) }</p>
 						<p className='msg'>{ getMsg(mode, msg, name) }</p>
 						<p className='date'>{ date }</p>
 					</ContentStyled>
 				</li>
-			)
+			) : null
 		}) }
 	</UlStyled>)
 }
