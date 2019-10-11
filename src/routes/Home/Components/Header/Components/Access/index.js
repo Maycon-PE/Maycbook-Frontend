@@ -8,6 +8,9 @@ import validOrError from '../../../../../../Global/functions/validOrError'
 import local from '../../../../../../Global/functions/localStorage'
 import Erro from '../../../../../../Global/Components/Erro'
 
+//Toasts
+import InvalidAccount from '../../../Toasts/InvalidAccount'
+
 import * as requests from './requests'
 
 import {
@@ -29,17 +32,19 @@ const Access = ({ push, success }) => {
 			validOrError('email', data.email)
 			validOrError('password', data.password)
 
+			data.password = data.password.toLowerCase()
+
 			requests
 				.login(data)
 				.then(res => {
 					success(res)
 					local.set(res.token)
 
-					if (push) push('/maycbook')
+					if (push) push(`/maycbook`)
 					else toast.error('Erro no redirecionamento, tente novamente!')
 
 				}).catch(() => {
-					toast.warn('Conta inválida')
+					toast.warn(<InvalidAccount />)
 				})
 			
 		} catch (e) {

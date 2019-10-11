@@ -8,6 +8,11 @@ import validOrError from '../../../../../../Global/functions/validOrError'
 import local from '../../../../../../Global/functions/localStorage'
 import Erro from '../../../../../../Global/Components/Erro'
 
+//Toasts
+import InvalidImage from '../../../Toasts/InvalidImage'
+import PasswordNotEquals from '../../../Toasts/PasswordNotEquals'
+import AccountNotCreated from '../../../Toasts/AccountNotCreated'
+
 import * as requests from './requests'
 
 import {
@@ -19,8 +24,12 @@ import {
 	ActionArea as ActionsAreaStyled
 } from './styles'
 
+const initial_state = {
+	genre: 'm', image: null
+}
+
 const Register = ({ push, success }) => {
-	const [data, setData] = useState({ genre: 'm' })
+	const [data, setData] = useState({ ...initial_state })
 
 	const submit = e => {
 
@@ -28,12 +37,14 @@ const Register = ({ push, success }) => {
 
 			try {
 
+				if (!data.image) throw (<InvalidImage />)
+
 				data.password = data.password.toLowerCase()
 				data.confirmPassword = data.confirmPassword.toLowerCase()
 
 				if (data.password !== data.confirmPassword) {
 					document.getElementById('$register_confirmPassowrd$').focus()
-					throw 'Senhas diferentes!!!'
+					throw (<PasswordNotEquals />)
 				}
 
 				validOrError('genre', data.genre)
@@ -41,32 +52,64 @@ const Register = ({ push, success }) => {
 				validOrError('name', data.name)
 				validOrError('password', data.password)
 
+				data.password = data.password.toLowerCase()
+
 				requests
 					.store(data)
 					.then(res => {
+						toast.success(`${data.email} - criada com sucesso!!!`)
 						success(res)
 						local.set(res.token)
-						toast.success(`${data.email} - criada com sucesso!!!`)
 
 						if (push) push('/maycbook')
 						else toast.error('Erro no redirecionamento, tente novamente!')
 
 					}).catch(() => {
-						toast.error('Cadastro não realizado :(')
+						toast.error(<AccountNotCreated />)
 					})
 
 			} catch(e) {
 
 				if (e === null) return toast.error(<Erro />, { autoClose: false })
+				console.log(typeof e)
 
-				typeof e === 'string' && toast.error(e)
+				typeof e === 'string' || typeof e === 'object' && toast.error(e)
 
 			}
 	}
 
+	const setImage = ({ target }) => {
+		if (target.files[0]) {
+			!data.image && setData({ ...data, image: target.files[0] })
+		} else {
+			data.image && setData({ ...data, image: null })
+		}
+	}
+
+	const removeImage = () => {
+		document.getElementById('file').value = null
+		setData({ ...data, image: null })
+	}
+
+
 	return (
 		<FormStyled autoComplete='off' onSubmit={ submit }>
 			<TitleStyled><span className='_title'>Crie sua conta no Maycbook</span> <span className='_subtitle'>Rápido e facil!</span></TitleStyled>
+			<InputsGroupStyled>
+				<InputAreaStyled style={{ flex: '4' }}>
+
+					<label htmlFor='file'>escolha uma foto</label>
+					<input
+						id='file'
+						type='file'
+						onChange={ setImage } />
+					<button type='button' className='set-image' onClick={ () => document.getElementById('file').click() }> { data.image ? data.image.name : 'selecione' }</button>
+
+				</InputAreaStyled>
+				<InputAreaStyled style={{ flex: '1' }}>
+					<button type='button' className='throw-image' onClick={ removeImage }><i className='fa fa-window-close'></i></button>
+				</InputAreaStyled>
+			</InputsGroupStyled>
 			<InputsGroupStyled>
 				<InputAreaStyled style={{ flex: '1', marginRight: '10px' }}>
 

@@ -11,3 +11,15 @@ export const reconnect = token => {
 			})
 	})
 }
+
+export const notifications = ({ token, mode }) => {
+	return new Promise((resolve, reject) => {
+		api
+			.get(`/auth/user/${mode}`, { headers: { Authorization: `Bearer ${ token }` } })
+			.then(({ data }) => {
+				resolve(data)
+			}).catch(err => {
+				reject(err)
+			})
+	})
+}
