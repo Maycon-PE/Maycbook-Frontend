@@ -25,7 +25,12 @@ const initio_view = {
 	search: {}
 }
 
-const Notifications = ({ payload, responsived }) => {
+const Notifications = ({ payload, responsived, push }) => {
+
+	const toPost = _id => {
+		console.log(`/auth/post/${_id}`)
+		push(`/maycbook/post/${_id}`)
+	}
 
 	const getMsg = (mode, msg, name ) => {
 		switch(mode) {
@@ -60,9 +65,9 @@ const Notifications = ({ payload, responsived }) => {
 	}
 
 	return (<UlStyled responsivided={ responsived }>
-		{ payload.documents.user.notifications.map(({ mode, who, image, _id, name, msg, date }) => {
+		{ payload.documents.user.notifications.map(({ mode, who, image, _id, name, msg, date, post_id }) => {
 			return payload.id !== who ? (
-				<li key={`item_notification_${date}`}>
+				<li key={`item_notification_${_id}`} onClick={ () => toPost(post_id) }>
 					<ImgStyled>
 						<img 
 							src={`${baseURL}/files/uploads/${image}`}
@@ -79,6 +84,6 @@ const Notifications = ({ payload, responsived }) => {
 	</UlStyled>)
 }
 
-const mapStateToProps = state => ({ payload: state.payload, responsived: state.responsived })
+const mapStateToProps = state => ({ payload: state.payload, responsived: state.responsived, push: state.push })
 
 export default connect(mapStateToProps)(Notifications)

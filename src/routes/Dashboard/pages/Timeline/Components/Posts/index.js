@@ -1,8 +1,12 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { connect } from 'react-redux'
+
+import * as requests from './requests'
 
 import { baseURL } from '../../../../../../Global/api'
 
 import Comment from './Components/Comment'
+import Loading from './Components/Loading'
 
 import {
 	Container as ContainerStyled,
@@ -21,10 +25,31 @@ import {
 	CommentsActions as CommentsActionsStyled
 } from './styles'
 
-const Post = ({ data, fb }) => {
-	const [doComments, setDoComments] = useState({ status: false, sending: false })
+
+const initial_refresh = {
+	ok: false, status: false
+}
+
+const Post = ({ data, fb, token }) => {
+	const [doComments, setDoComments] = useState({ sending: false })
+	const [refresh, setRefresh] = useState({ ...initial_refresh })
+	const [commentsOpen, setCommentsOpen] = useState(false)
+	const [comments, setComments] = useState([])
 
 	const { id, path, date, content, author, author_image, stats } = data
+
+	const doRequest = () => {
+		console.log('buscando')
+
+		requests
+			.comments({ token, _id: stats._id })
+			.then(comments => {
+				setComments(comments)
+				setRefresh({ status: true, ok: true })
+			}).catch(err => {
+				setRefresh({ status: true, ok: false })
+			})
+	}
 
 	const like = () => {
 		fb.like(stats._id, res => {
@@ -38,7 +63,7 @@ const Post = ({ data, fb }) => {
 
 	const comment = e => {
 		e.preventDefault()
-		setDoComments({ status: true, sending: true })
+		setDoComments({ sending: true })
 
 		const msg = document.getElementById(`post_id_${stats._id}`).value
 
@@ -48,21 +73,40 @@ const Post = ({ data, fb }) => {
 
 			if (res) {
 				document.getElementById(`post_id_${stats._id}`).value = ''
+				doRequest()
 			}
-			setDoComments({ status: true, sending: false })
+			setDoComments({ sending: false })
 		})
+	}
+
+	const clickComments = () => {
+		!commentsOpen && doRequest()
+
+		setCommentsOpen(!commentsOpen)
+	}
+
+	const doRefresh = () => {
+		setRefresh({ ...initial_refresh })
 	}
 
 	const renderComments = () => {
-		const comments = []
+		const blockComments = []
 
 
-		stats.data.comments.forEach(data => {
-			comments.push(<Comment key={`comment_${data._id}`} data={data} />)
+		comments.forEach(data => {
+			blockComments.push(<Comment key={`comment_${data._id}`} data={data} />)
 		})
 
-		return comments
+		return blockComments
 	}
+
+	useEffect(() => {
+		doRequest()
+	}, [])
+
+	useEffect(() => {
+		if (commentsOpen && !refresh.status) doRequest()
+	}, [refresh])
 
 	return (
 		<ContainerStyled>
@@ -86,22 +130,25 @@ const Post = ({ data, fb }) => {
 			<FooterStyled>
 				<ActionsStyled>
 					<LikeButtonStyled onClick={ like }>Curtir - { stats.data.rate.likes.length }</LikeButtonStyled>
-					<CommentButtonStyled onClick={() => setDoComments({ ...doComments, status: !doComments.status }) }>Comentar - { stats.data.comments.length }</CommentButtonStyled>
+					<CommentButtonStyled onClick={ clickComments }>Comentar - { comments.length }</CommentButtonStyled>
 				</ActionsStyled>
-				<CommentsAreaStyled opened={ doComments.status }>
+				<CommentsAreaStyled opened={ commentsOpen }>
 					<DoCommentsStyled req={ doComments.sending } onSubmit={ comment }>
 						<textarea id={`post_id_${ stats._id }`} minLength='1' maxLength='200' required>
 						</textarea>
 						<CommentsActionsStyled>
 							<button style={{ flex: '2' }} type='submit'>Enviar</button>
 							<button type='button' onClick={() => document.getElementById(`post_id_${stats._id}`).value = ''}>Apagar tudo</button>
+							<button type='button' onClick={ doRefresh }>Refresh</button>
 						</CommentsActionsStyled>
 					</DoCommentsStyled>
-					{ renderComments() }
+					{  refresh.status ? refresh.ok ? renderComments() : <h1>Ocorreu um erro!</h1> : <Loading /> }
 				</CommentsAreaStyled>
 			</FooterStyled>
 		</ContainerStyled>
 	)
 }
 
-export default Post
+const mapStateToProps = state => ({ token: state.payload.token })
+
+export default connect(mapStateToProps)(Post)

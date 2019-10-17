@@ -11,8 +11,7 @@ import Publication from './Components/Publication'
 import Post from './Components/Posts'
 
 import {
-	Container as ContainerStyled,
-	LoadMore as LoadMoreStyled
+	Container as ContainerStyled
 } from './styles'
 
 
@@ -59,7 +58,7 @@ const Timeline = ({ payload, mySocket }) => {
 			console.log('disconnect')
 		})
 
-		mySocket.on('requests', where => {
+		mySocket.on('new_post', where => {
 			if (typeof where === 'object' && +where.who !== +payload.id) {
 				toast.info(<NewPublication data={ where } />)
 			}

@@ -58,13 +58,13 @@ export const Legend = styled.footer`
 `
 
 export const Img = styled.div`
-	width: 100%;
+	width: 90%;
+	position: realtive;
 	display: flex;
 	justify-content: center;
 
 	> img {
-		min-width: 55%;
-		max-width: 90%;
+		width: 100%;
 		border-radius: 5px;
 	}
 
@@ -118,6 +118,10 @@ export const CommentButton = styled.button`
 export const CommentsArea = styled.div`
 	transition: all .5s ease-in;
 	width: 100%;
+	position: relative;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
 	transform: scaleY(${({ opened }) => opened ? '1' : '0'});
 	${({ opened }) => opened ? `
 		max-height: 400px;
@@ -136,6 +140,7 @@ export const DoComments = styled.form`
 			cursor: wait;
 		}
 	`}
+		width: 100%;
 
 	> textarea {
 		width: 100%;

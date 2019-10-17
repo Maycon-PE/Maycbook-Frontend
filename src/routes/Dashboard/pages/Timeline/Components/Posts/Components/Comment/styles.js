@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 10px;
+  width: 100%;
   max-height: 200px;
   margin: 10px 2px;
   background: steelblue;
@@ -40,6 +41,6 @@ export const Msg = styled.article`
 
   > p {
     text-indent: 10px;
-    padding-right: 2px;
+    padding-right: 10px;
   }
 `
