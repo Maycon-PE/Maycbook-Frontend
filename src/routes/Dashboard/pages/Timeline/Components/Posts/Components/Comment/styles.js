@@ -5,6 +5,7 @@ export const Container = styled.div`
   flex-direction: column;
   align-items: center;
   padding: 10px;
+  width: 100%;
   max-height: 200px;
   margin: 10px 2px;
   background: steelblue;
@@ -15,7 +16,8 @@ export const Img = styled.div`
   top: 0;
 
   > img {
-    width: 55px;
+    width: 60px;
+    height: 60px;
     margin: 10px;
     border-radius: 10px;
   }
@@ -40,6 +42,6 @@ export const Msg = styled.article`
 
   > p {
     text-indent: 10px;
-    padding-right: 2px;
+    padding-right: 10px;
   }
 `

@@ -47,7 +47,7 @@ export const AreaButtons = styled.footer`
 	justify-content: space-around;
 
 	> button {
-		padding: 2px;
+		padding: 4px 6px;
 		border-radius: 5px;
 		border: none;
 		opacity: .8;

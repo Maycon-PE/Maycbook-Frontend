@@ -11,6 +11,3 @@ export const Container = styled.article`
 	align-items: center;
 `
 
-export const LoadMore = styled.button`
-
-`

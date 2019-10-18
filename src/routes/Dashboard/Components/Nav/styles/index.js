@@ -15,4 +15,9 @@ export const Area = styled.nav`
 	display: flex;
 	justify-content: space-around;
 	align-items: center;
+
+	> img {
+		width: 30px;
+		height: 30px;
+	}
 `

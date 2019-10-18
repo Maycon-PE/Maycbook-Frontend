@@ -51,7 +51,8 @@ export const Img = styled.div`
 	align-items: center;
 
 	> img {
-		width: 55px;
+		width: 60px;
+		height: 60px;
 		border-radius: 50%;
 	} 
 
