@@ -1,11 +1,13 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+
 import { BrowserRouter as Router } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify'
 
 import store from './Global/redux/store'
 
 import 'react-toastify/dist/ReactToastify.min.css'
+
 
 import Routes from './routes'
 

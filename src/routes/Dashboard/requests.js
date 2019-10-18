@@ -23,3 +23,12 @@ export const notifications = ({ token, mode }) => {
 			})
 	})
 }
+
+export const talkAll = ({ msg, token }) => {
+	return new Promise((resolve, reject) => {
+		api
+			.post('/auth/talk', { msg }, { headers: { Authorization: `Bearer ${ token }` } })
+			.then(({ data }) => resolve(data))
+			.catch(err => reject(err))
+	})
+}

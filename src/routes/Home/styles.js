@@ -11,7 +11,6 @@ export const Container = styled.div`
 		'body'
 		'footer';
 
-
 	@media (max-width: 600px)	 {
 		grid-template-rows: 180px 1fr 200px;
 	}

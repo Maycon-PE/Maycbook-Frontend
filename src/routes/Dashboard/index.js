@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react'
+import { Widget, addResponseMessage, addUserMessage   } from 'react-chat-widget'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 import socket from 'socket.io-client'
+
+import 'react-chat-widget/lib/styles.css'
 
 import Notification from './Components/Toasts/IO/Notification'
 import Dialogue from './Components/Toasts/IO/Dialogues'
@@ -23,8 +26,6 @@ import local from '../../Global/functions/localStorage'
 
 import * as requests from './requests'
 
-import initial_states from './initial_states'
-
 import {
 	Loading as LoadingStyled,
 	Container as ContainerStyled
@@ -32,7 +33,6 @@ import {
 
 const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
-	const [viewPost, setViewPost] = useState({ ...initial_states.viewPost })
 
 	const doRequest = mode => {
 		const token = payload.token
@@ -82,18 +82,23 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 			io.on('posts_deleted', ids => {
 				toast.error(<p>Inconcistência de dados e publicações foram excluidas<br />{ ids.join(' - ') }</p>)
+			})	
+			
+			io.on('talk_all', data => {
+				if (data.who_id !== payload.id) {
+					addResponseMessage(`${ data.name } - ${data.msg}`)
+				}
 			})
 
 		})
 	}
 
 	useEffect(() => {
-
 		const reconnect = () => {
 			if (payload === null || Object.values(payload).length === 0) {
 				requests
 					.reconnect(local.get())
-					.then(res => {
+					.then(res => {					
 						setPayload(res)
 					}).catch(err => {
 						local.remove()
@@ -136,15 +141,28 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		switch(index) {
 			case 1:
 				return <Profile />
-				break;
 			default:
 				return <Timeline />
 		}
 	}
 
+	const handleNewUserMessage = (msg) => {
+		requests
+			.talkAll({ token: payload.token, msg })
+			.then(res => {
+				console.log(res)
+			})
+			.catch(err => console.log(err))	
+	}
+	
 	return preparetion ? 
 		<ContainerStyled> 
 			<Nav />
+			<Widget
+				title='Super Chat'
+				subtitle='Bate-papo com todos'
+				senderPlaceHolder='Escreva aqui!'
+				handleNewUserMessage={ handleNewUserMessage } />
 			{ renderBody(bodyDashboard) } 
 		</ContainerStyled> : <LoadingStyled> <img src='./imagens/loading.gif' alt='Imagem de loading' /> </LoadingStyled>
 }
