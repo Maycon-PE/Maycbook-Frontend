@@ -27,7 +27,8 @@ export const Button  = styled.button`
 `
 
 export const Profile = styled.img`
-  width: 21px;
+  width: 30px;
+  height: 30px;
   margin-right: 4px;
   border-radius: 50%;
 `

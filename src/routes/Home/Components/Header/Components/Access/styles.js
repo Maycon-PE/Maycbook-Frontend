@@ -22,7 +22,7 @@ export const InputGroup = styled.div`
 
 	> input {
 		margin: 4px 0;
-		padding: 2px;
+		padding: 4px;
 		display: block;
 		border-radius: 4px;
 
@@ -41,7 +41,7 @@ export const InputGroup = styled.div`
 export const Submit = styled.button`
 	margin: 5px;
 	border-radius: 4px;
-	padding: 1px 3px;
+	padding: 3px 6px;
 	background: rgba(0, 0, 0, .5);
 	color: white;
 	border: 1px solid white;

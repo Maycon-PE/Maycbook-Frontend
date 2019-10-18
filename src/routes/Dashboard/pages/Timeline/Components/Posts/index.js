@@ -39,8 +39,6 @@ const Post = ({ data, fb, token }) => {
 	const { id, path, date, content, author, author_image, stats } = data
 
 	const doRequest = () => {
-		console.log('buscando')
-
 		requests
 			.comments({ token, _id: stats._id })
 			.then(comments => {
@@ -121,7 +119,7 @@ const Post = ({ data, fb, token }) => {
 			</HeaderStyled>
 			<PictureStyled>
 				<ImgStyled>
-					<img src={`${baseURL}/files/uploads/${path}`} alt='Publicação do autor' />
+					<img id={stats._id} src={`${baseURL}/files/uploads/${path}`} alt='Publicação do autor' />
 				</ImgStyled>
 				<LegendStyled>
 					<p>{ content }</p>

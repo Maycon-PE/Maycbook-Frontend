@@ -27,9 +27,8 @@ const initio_view = {
 
 const Notifications = ({ payload, responsived, push }) => {
 
-	const toPost = _id => {
-		console.log(`/auth/post/${_id}`)
-		push(`/maycbook/post/${_id}`)
+	const target = _id => {
+		push && push(`/maycbook/#${_id}`)
 	}
 
 	const getMsg = (mode, msg, name ) => {
@@ -67,17 +66,17 @@ const Notifications = ({ payload, responsived, push }) => {
 	return (<UlStyled responsivided={ responsived }>
 		{ payload.documents.user.notifications.map(({ mode, who, image, _id, name, msg, date, post_id }) => {
 			return payload.id !== who ? (
-				<li key={`item_notification_${_id}`} onClick={ () => toPost(post_id) }>
-					<ImgStyled>
-						<img 
-							src={`${baseURL}/files/uploads/${image}`}
-							alt={`Imagem do/da ${name}`} />
-					</ImgStyled>
-					<ContentStyled>
-						<p className='who'>{ name } - { getAction(mode) }</p>
-						<p className='msg'>{ getMsg(mode, msg, name) }</p>
-						<p className='date'>{ date }</p>
-					</ContentStyled>
+				<li key={`item_notification_${_id}`} onClick={ () => target(_id) }>
+						<ImgStyled>
+							<img 
+								src={`${baseURL}/files/uploads/${image}`}
+								alt={`Imagem do/da ${name}`} />
+						</ImgStyled>
+						<ContentStyled>
+							<p className='who'>{ name } - { getAction(mode) }</p>
+							<p className='msg'>{ getMsg(mode, msg, name) }</p>
+							<p className='date'>{ date }</p>
+						</ContentStyled>
 				</li>
 			) : null
 		}) }

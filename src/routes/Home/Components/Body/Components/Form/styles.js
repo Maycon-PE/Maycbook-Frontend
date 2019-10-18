@@ -41,15 +41,15 @@ export const InputArea = styled.div`
 	}
 
 	> input {
-		padding: 3px;
+		padding: 5px;
 	}
 
 	> select {
-		padding: 4px;
+		padding: 6px;
 	}
 
 	> button {
-		padding: 5px;
+		padding: 8px;
 	}
 
 	> button.set-image {
@@ -116,5 +116,5 @@ export const ActionArea = styled.div`
 `
 
 export const Action = styled.button`
-	padding: 3px;
+	padding: 4px 6px;
 `

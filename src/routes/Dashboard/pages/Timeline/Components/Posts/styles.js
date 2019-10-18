@@ -29,6 +29,7 @@ export const Author = styled.div`
 
 	> img {
 		width: 70px;
+		height: 70px;
 		border-radius: 10px;
 		margin-right: 10px;
 	}
@@ -89,7 +90,7 @@ export const Actions = styled.div`
 
 	> button {
 		margin: 0 5px;
-		padding: 3px;
+		padding: 4px 6px;
 		border-radius: 4px;
 		text-transform: uppercase;
 	}
