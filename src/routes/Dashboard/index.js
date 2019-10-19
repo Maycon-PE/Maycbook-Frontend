@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Widget, addResponseMessage, addUserMessage   } from 'react-chat-widget'
+import { Widget, addResponseMessage, addUserMessage } from 'react-chat-widget'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 import socket from 'socket.io-client'
@@ -34,8 +34,8 @@ import {
 const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
 
-	const doRequest = mode => {
-		const token = payload.token
+	const doRequest = (mode, pay) => {
+		const token = pay.token
 
 		requests
 			.notifications({ token, mode })
@@ -54,7 +54,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		}
 	}, [])
 
-	const startSocket = () => {
+	const startSocket = (res) => {
 
 		const options = {
 			closeOnClick: false
@@ -62,7 +62,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		
 		const io = socket(baseURL, {
 			query: {
-				user_id: payload.id
+				user_id: res.id
 			}
 		})
 
@@ -72,12 +72,12 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 			io.on('actions', data => {
 				toast.info(<Notification data={ data } />, options)
-				doRequest('notifications')
+				doRequest('notifications', res)
 			})
 
 			io.on('dialogues', data => {
 				toast.info(<Dialogue data={ data } />, options)
-				doRequest('dialogues')
+				doRequest('dialogues', res)
 			})
 
 			io.on('posts_deleted', ids => {
@@ -85,12 +85,14 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 			})	
 			
 			io.on('talk_all', data => {
-				if (data.who_id !== payload.id) {
+				if (data.who_id !== res.id) {
 					addResponseMessage(`${ data.name } - ${data.msg}`)
 				}
 			})
 
 		})
+
+
 	}
 
 	useEffect(() => {
@@ -100,6 +102,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 					.reconnect(local.get())
 					.then(res => {					
 						setPayload(res)
+						startSocket(res)
 					}).catch(err => {
 						local.remove()
 						toast.error(err)
@@ -120,8 +123,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 	useEffect(() => {
 		payload && Object.values(payload).length && (() => {
-			setPreparetion(true)	
-			startSocket()
+			setPreparetion(true)
 		})()
 	}, [payload])
 
