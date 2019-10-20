@@ -1,10 +1,7 @@
 import React, { useState, useEffect, Fragment } from 'react'
 import { connect } from 'react-redux'
-import { toast } from 'react-toastify'
 
 import * as requests from './requests'
-
-import NewPublication from '../../Components/Toasts/IO/NewPublication'
 
 import NextBack from './Components/NextBack'
 import Publication from './Components/Publication'
@@ -15,8 +12,7 @@ import {
 } from './styles'
 
 
-const Timeline = ({ payload, mySocket }) => {
-	const [showLoadMore, setShowLoadMore] = useState(true)
+const Timeline = ({ payload }) => {
 	const [page, setPage] = useState(0)
 	const [pagination, setPagination] = useState({ count: 1, limit: 1 })
 	const [ready, setReady] = useState({ status: false, msg: 'Carregando' })
@@ -47,24 +43,6 @@ const Timeline = ({ payload, mySocket }) => {
 			}).catch(err => setReady({ status: false, msg: 'Houve um erro' }))
 	}
 
-
-	const startSocket = () => {
-
-		mySocket.on('connect', () => {
-			console.log('connect')
-		})
-
-		mySocket.on('disconnect', () => {
-			console.log('disconnect')
-		})
-
-		mySocket.on('new_post', where => {
-			if (typeof where === 'object' && +where.who !== +payload.id) {
-				toast.info(<NewPublication data={ where } />)
-			}
-		})
-	}
-
 	const actions = {
 		like: (_id, cb) => {
 			requests
@@ -92,11 +70,6 @@ const Timeline = ({ payload, mySocket }) => {
 		doRequest()
 	}, [page])
 
-	useEffect(() => {
-		mySocket && startSocket()
-	}, [mySocket])
-
-
 	const renderPosts = posts => {
 		const pBody = []
 
@@ -119,6 +92,6 @@ const Timeline = ({ payload, mySocket }) => {
 	)
 }
 
-const mapStateToProps = state => ({ payload: state.payload, mySocket: state.socket })
+const mapStateToProps = state => ({ payload: state.payload })
 
 export default connect(mapStateToProps)(Timeline)

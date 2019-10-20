@@ -10,7 +10,7 @@ export const send = ({ data, token }) => {
 		formData.append('image', data.image)
 
 		api
-			.post('/auth/post', formData, { headers: { Authorization: `Bearer ${token}`, ['Content-Type']: 'multipart/form-data' } })
+			.post('/auth/post', formData, { headers: { Authorization: `Bearer ${token}`, ContentType: 'multipart/form-data' } })
 			.then(() => resolve())
 			.catch(() => reject())
 

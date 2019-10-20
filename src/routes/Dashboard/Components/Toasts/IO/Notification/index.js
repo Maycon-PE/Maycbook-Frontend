@@ -11,7 +11,7 @@ import {
 } from './styles'
 
 const Notification = ({ data }) => {
-	const { mode, who, name, image, date, msg } = data
+	const { mode, name, image, date, msg } = data
 
 	const getMsg = () => {
 		switch(mode) {

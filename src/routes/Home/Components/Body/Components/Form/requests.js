@@ -11,7 +11,7 @@ export const store = (data) => {
 			})
 
 		api
-			.post('/user', formData, { headers: { ['Content-Type']: 'multipart/form-data' } })
+			.post('/user', formData, { headers: { ContentType: 'multipart/form-data' } })
 			.then(({ data }) => {
 				resolve(data)
 			}).catch(err => {

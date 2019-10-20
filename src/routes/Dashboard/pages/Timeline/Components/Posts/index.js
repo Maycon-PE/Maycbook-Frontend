@@ -36,7 +36,7 @@ const Post = ({ data, fb, token }) => {
 	const [commentsOpen, setCommentsOpen] = useState(false)
 	const [comments, setComments] = useState([])
 
-	const { id, path, date, content, author, author_image, stats } = data
+	const { path, content, author, author_image, stats } = data
 
 	const doRequest = () => {
 		requests

@@ -19,10 +19,11 @@ const Home = ({ history, push, setPush, payload, resetPayload, mySocket }) => {
 	!push && setPush(history.push)
 
 	useEffect(() => {
+		console.log('resetando')
 		payload && resetPayload()
 		mySocket && mySocket.close()
 		toast.dismiss()
-	}, [])
+	}, [payload, mySocket])
 
 	useEffect(() => {
 		local.get() && (() => {

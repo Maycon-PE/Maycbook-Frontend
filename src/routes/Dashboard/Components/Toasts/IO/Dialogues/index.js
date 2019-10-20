@@ -5,7 +5,7 @@ import {
 } from './styles'
 
 const Dialogue = ({ data }) => {
-	const { who, name, image, date, msg } = data
+	const { who, name, date, msg } = data
 
 	return (
 		<ContainerStyled>

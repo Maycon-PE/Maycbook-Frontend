@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React from 'react'
 import { connect } from 'react-redux'
 
 import { baseURL } from '../../../../../../../../Global/api'
@@ -6,24 +6,8 @@ import { baseURL } from '../../../../../../../../Global/api'
 import {
 	Ul as UlStyled,
 	Img as ImgStyled,
-	Content as ContentStyled,
-	ViewContainer as ViewContainerStyled,
-	View as ViewStyled,
-	ViewLeft as ViewLeftStyled,
-	LViewHeader as LViewHeaderStyled,
-	LViewPicture as LViewPictureStyled,
-	LViewFooter as LViewFooterStyled,
-	ViewRight as ViewRightStyled,
-	RViewHeader as RViewHeaderStyled,
-	RViewComments as RViewCommentsStyled,
-	AreaComments as AreaCommentsStyled
+	Content as ContentStyled
 } from './styles'
-
-const initio_view = {
-	opened: false,
-	ready: false,
-	search: {}
-}
 
 const Notifications = ({ payload, responsived, push }) => {
 

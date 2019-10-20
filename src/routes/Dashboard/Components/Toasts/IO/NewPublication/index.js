@@ -10,7 +10,7 @@ import {
 } from './styles'
 
 const NewPublication = ({ data }) => {
-	const { who, name, image, path } = data
+	const { name, image, path } = data
 
 	return (
 		<Fragment>

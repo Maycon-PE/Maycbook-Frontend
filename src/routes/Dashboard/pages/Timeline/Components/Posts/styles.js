@@ -66,6 +66,7 @@ export const Img = styled.div`
 
 	> img {
 		width: 100%;
+		max-height: 1000px;
 		border-radius: 5px;
 	}
 

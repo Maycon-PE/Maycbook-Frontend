@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { Widget, addResponseMessage, addUserMessage } from 'react-chat-widget'
+import { Widget, addResponseMessage } from 'react-chat-widget'
 import { connect } from 'react-redux'
 import { toast } from 'react-toastify'
 import socket from 'socket.io-client'
 
 import 'react-chat-widget/lib/styles.css'
 
+import NewPublication from './Components/Toasts/IO/NewPublication'
 import Notification from './Components/Toasts/IO/Notification'
 import Dialogue from './Components/Toasts/IO/Dialogues'
 
@@ -34,8 +35,8 @@ import {
 const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard, responsived, setResponsive, setSocket, setNotifications }) => {
 	const [preparetion, setPreparetion] = useState(false)
 
-	const doRequest = (mode, pay) => {
-		const token = pay.token
+	const doRequest = mode => {
+		const token = payload.token
 
 		requests
 			.notifications({ token, mode })
@@ -54,7 +55,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		}
 	}, [])
 
-	const startSocket = (res) => {
+	const startSocket = () => {
 
 		const options = {
 			closeOnClick: false
@@ -62,7 +63,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 		
 		const io = socket(baseURL, {
 			query: {
-				user_id: res.id
+				user_id: payload.id
 			}
 		})
 
@@ -72,20 +73,26 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 
 			io.on('actions', data => {
 				toast.info(<Notification data={ data } />, options)
-				doRequest('notifications', res)
+				doRequest('notifications', payload)
 			})
 
 			io.on('dialogues', data => {
 				toast.info(<Dialogue data={ data } />, options)
-				doRequest('dialogues', res)
+				doRequest('dialogues', payload)
 			})
 
 			io.on('posts_deleted', ids => {
 				toast.error(<p>Inconcistência de dados e publicações foram excluidas<br />{ ids.join(' - ') }</p>)
+			})
+
+			io.on('new_post', where => {
+				if (typeof where === 'object' && +where.who !== +payload.id) {
+					toast.info(<NewPublication data={ where } />)
+				}
 			})	
 			
 			io.on('talk_all', data => {
-				if (data.who_id !== res.id) {
+				if (data.who_id !== payload.id) {
 					addResponseMessage(`${ data.name } - ${data.msg}`)
 				}
 			})
@@ -102,7 +109,7 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 					.reconnect(local.get())
 					.then(res => {					
 						setPayload(res)
-						startSocket(res)
+						setPreparetion(true)
 					}).catch(err => {
 						local.remove()
 						toast.error(err)
@@ -122,10 +129,13 @@ const Dashboard = ({ history, push, setPush, payload, setPayload, bodyDashboard,
 	}, [])
 
 	useEffect(() => {
-		payload && Object.values(payload).length && (() => {
-			setPreparetion(true)
-		})()
-	}, [payload])
+		if (!preparetion) {
+			payload && Object.values(payload).length && (() => {
+				setPreparetion(true)
+				startSocket()
+			})()
+		}
+	}, [payload, preparetion])
 
 	useEffect(() => {
 		document.body.onresize = ({ currentTarget }) => {
